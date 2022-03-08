@@ -1,16 +1,19 @@
-# dove_comprare
+# Dove Comprare
 
-A new Flutter project.
+applicazione mobile sviluppata con framework Flutter e linguaggio dart
 
-## Getting Started
+## Cosa fa?
 
-This project is a starting point for a Flutter application.
+l'idea dietro a questa applicazione è quella di poter cercare unn determinato prodotto alimentare, o venduto in un supermercato e trovare con una mappa i negozi dove l'articolo cosata di meno.
 
-A few resources to get you started if this is your first Flutter project:
+L'appicazione inoltre permette la modifica, l'aggiunta, di prodotti tramite il loro codice a barre.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+La ricerca può anche essere effettuata tramite lo scan del codice a barre.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Risorse
+- [Flutter](https://flutter.dev/)
+- [Dart](https://dart.dev/)
+- [OpenStreetMap](https://www.openstreetmap.org/)
+- [OpenStreetMap Plugin](https://pub.dev/packages/flutter_osm_plugin)
+- [flutter_barcode_scanner plugin](https://pub.dev/packages/flutter_barcode_scanner/example)
+- [mySql for dart](https://pub.dev/packages/mysql1)
