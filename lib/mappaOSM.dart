@@ -18,9 +18,9 @@ class OSMap extends StatelessWidget {
     return OSMFlutter(
       controller: controller,
       trackMyPosition: true,
-      initZoom: 12,
-      minZoomLevel: 8,
-      maxZoomLevel: 14,
+      initZoom: 19,
+      maxZoomLevel: 19,
+      minZoomLevel: 2,
       stepZoom: 1.0,
       userLocationMarker: UserLocationMaker(
         personMarker: MarkerIcon(

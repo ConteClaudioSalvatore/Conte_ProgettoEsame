@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dove_comprare/SearchBar.dart';
 import 'package:dove_comprare/mappaOSM.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -54,7 +55,7 @@ class _MyAppState extends State<MyApp> {
             height: 60,
             child: ElevatedButton(
               onPressed: () => scanBarcodeNormal(),
-              child: Icon(Icons.qr_code_scanner_rounded),
+              child: const Icon(Icons.qr_code_scanner_rounded),
               style: ButtonStyle(
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
@@ -63,17 +64,16 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
         ),
-        body: OSMap(),
-        appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 182, 255, 186),
-          title: Text('cerca...'),
-          toolbarHeight: 40,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.horizontal(
-              left: Radius.circular(50.0),
-              right: Radius.circular(50.0),
+        body: Stack(
+          children: [
+            const OSMap(),
+            Stack(
+              children: const [
+                SearchBar(),
+              ],
+              fit: StackFit.passthrough,
             ),
-          ),
+          ],
         ),
       ),
     );
