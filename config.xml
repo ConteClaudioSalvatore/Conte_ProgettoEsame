@@ -1,11 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="edu.valluri.trial1" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>cordova_trial</name>
-    <description>App trial per le mappe e per il barcode scannning</description>
+<widget id="claudiosalvatore.conte.dove_conviene" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Dove Comprare</name>
+    <description>App per cercare dove conviene un certo prodotto</description>
     <author email="c.conte.1292@vallauri.edu" href="https://cordova.apache.org">
         Conte Claudio Salvatore
     </author>
     <content src="index.html" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
+    <platform name="android">
+        <icon src="./www/img/logo.png"></icon>
+    </platform>
 </widget>

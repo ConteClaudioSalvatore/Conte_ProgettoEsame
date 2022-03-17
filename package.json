@@ -1,6 +1,6 @@
 {
-  "name": "edu.valluri.trial1",
-  "displayName": "cordova_trial",
+  "name": "claudiosalvatore.conte.dove_conviene",
+  "displayName": "Dove_Conviene",
   "version": "1.0.0",
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
@@ -19,14 +19,13 @@
   },
   "cordova": {
     "plugins": {
-      "cordova-plugin-qr-barcode-scanner": {}
+      "cordova-plugin-qr-barcode-scanner": {
+        "ANDROID_SUPPORT_V4_VERSION": "27.+"
+      }
     },
     "platforms": [
       "android",
       "browser"
     ]
-  },
-  "dependencies": {
-    "jquery": "^3.6.0"
   }
 }

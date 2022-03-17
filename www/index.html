@@ -38,12 +38,18 @@
         <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.12.0/build/ol.js"></script>
         <script src="ol/ol.js"></script>
         <script src="js/jquery.js"></script>
-        <title>barcode scanning and map</title>
+        <title>Dove Conviene</title>
     </head>
     <body>
         <div class="app">
+            <div class="searchbar">
+                <input type="text" id="txtSearchBox" placeholder="Cerca..." autocomplete="on">
+                <img src="./img/search.png" id="icnSearch">
+            </div>
             <div id="map" class="map"></div>
-            <button id="btnBarcode">scan</button>
+            <button id="btnBarcode">
+                <img src="img/barcode.png">
+            </button>
         </div>
         <script src="cordova.js"></script>
         <script src="js/index.js"></script>
