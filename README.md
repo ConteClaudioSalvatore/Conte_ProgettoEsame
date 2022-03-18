@@ -1,6 +1,6 @@
 # Dove Comprare
 
-applicazione mobile sviluppata con framework Flutter e linguaggio dart
+applicazione mobile sviluppata con cordova
 
 ## Cosa fa?
 
@@ -11,9 +11,6 @@ L'appicazione inoltre permette la modifica, l'aggiunta, di prodotti tramite il l
 La ricerca può anche essere effettuata tramite lo scan del codice a barre.
 
 ## Risorse
-- [Flutter](https://flutter.dev/)
-- [Dart](https://dart.dev/)
+- [Cordova](https://cordova.apache.org/)
 - [OpenStreetMap](https://www.openstreetmap.org/)
-- [OpenStreetMap Plugin](https://pub.dev/packages/flutter_osm_plugin)
-- [flutter_barcode_scanner plugin](https://pub.dev/packages/flutter_barcode_scanner/example)
-- [mySql for dart](https://pub.dev/packages/mysql1)
+- [cordova-plugin-qr-barcode-scanner](https://www.npmjs.com/package/cordova-plugin-qr-barcode-scanner)
