@@ -12,5 +12,4 @@ La ricerca può anche essere effettuata tramite lo scan del codice a barre.
 
 ## Risorse
 - [Cordova](https://cordova.apache.org/)
-- [OpenStreetMap](https://www.openstreetmap.org/)
 - [cordova-plugin-qr-barcode-scanner](https://www.npmjs.com/package/cordova-plugin-qr-barcode-scanner)
