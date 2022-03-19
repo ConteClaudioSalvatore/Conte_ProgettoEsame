@@ -15,13 +15,15 @@
   "devDependencies": {
     "cordova-android": "^10.1.1",
     "cordova-browser": "^6.0.0",
-    "cordova-plugin-qr-barcode-scanner": "^8.0.3"
+    "cordova-plugin-qr-barcode-scanner": "^8.0.3",
+    "cordova-plugin-statusbar": "^3.0.0"
   },
   "cordova": {
     "plugins": {
       "cordova-plugin-qr-barcode-scanner": {
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
-      }
+      },
+      "cordova-plugin-statusbar": {}
     },
     "platforms": [
       "android",
