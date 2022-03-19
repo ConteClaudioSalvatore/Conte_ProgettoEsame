@@ -29,6 +29,15 @@
 .ol-attribution{
     display: none;
 }
+.ol-rotate{
+    bottom: 1em;
+    left: 1em;
+    border-radius: 50%;
+}
+.ol-rotate button{
+    border-radius: 50%;
+    background-color: #0099ff62;
+}
 .searchbar{
     margin: 10px;
     height: 50px;

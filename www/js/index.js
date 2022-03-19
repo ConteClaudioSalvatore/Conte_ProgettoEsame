@@ -25,8 +25,7 @@ function onDeviceReady() {
     // Cordova is now initialized. Have fun!
     mappa();
     $("#btnBarcode").on("click", barcodeScanner);
-
-    
+    StatusBar.show();    
 }
 
 function barcodeScanner(){
@@ -83,15 +82,41 @@ function mostraProdotto(result){
   let modal = $("#modal");
   let modalBody = $("#modalBody");
   let modalTitle = $("#modalTitle");
-  let call = sendRequestNoCallback("https://world.openfoodfacts.org/api/v0/product/" + result.text + ".json", "get", {});
-  call.done((data)=>{
-    modalBody.text(JSON.stringify(data));
-    modalTitle.text("sos");
-    modal.modal("show");
+  let url = "https://world.openfoodfacts.org/api/v0/product/" + result.text + ".json"
+  $.ajax({
+    url:url,
+    dataType: "json",
+    method:"get",
+    success: function(data){
+      data=data.product;
+      modalTitle.text(data.generic_name);
+      creaBodyProdotto(modalBody, data);
+      modal.modal("show");
+    },
+    error:function(err){
+      modalBody.text(JSON.stringify(err));
+      modalTitle.text("errore");
+      modal.modal("show");
+    }
   })
-  call.fail((err)=>{
-    modalBody.text(err.toString());
-    modalTitle.text("errore");
-    modal.modal("show");
-  })
+}
+function creaBodyProdotto(modalBody, data){
+  let divIngredienti = $("<div></div>");
+  modalBody.html("")
+  divIngredienti.text(data.ingredients_text);
+  modalBody.append(
+    $("<div></div>").addClass("row").append(
+      $("<div></div>").addClass("col-md-5").append(
+        $("<img>").addClass("img-responsive").css({
+          width: "100%"
+        }).attr("src",data.image_front_url)
+      )
+    ).append(
+      $("<div></div>").addClass('col-md-7').append(
+        $("<div></div>").append(
+          $("<h4></h4>").text("Ingredienti: ")
+        ).append(divIngredienti)
+      )
+    )
+  );
 }

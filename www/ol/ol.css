@@ -126,8 +126,6 @@
 }
 
 .ol-rotate {
-    top: .5em;
-    right: .5em;
     transition: opacity .25s linear, visibility 0s linear
 }
 
