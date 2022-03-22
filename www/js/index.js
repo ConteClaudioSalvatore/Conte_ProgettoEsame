@@ -89,7 +89,11 @@ function mostraProdotto(result){
     method:"get",
     success: function(data){
       data=data.product;
-      modalTitle.text(data.generic_name);
+      if(data.generic_name!= undefined)
+        modalTitle.text(data.generic_name);
+      else
+        modalTitle.text("Prodotto");
+      
       creaBodyProdotto(modalBody, data);
       modal.modal("show");
     },
@@ -106,7 +110,6 @@ function creaBodyProdotto(modalBody, data){
   let nutrientsTable = $("<table></table>");
   let divProdotto = $("<div></div>");
   
-    
   modalBody.append(
     divProdotto.addClass("row").append(
       $("<div></div>").addClass("col-md-5").append(
