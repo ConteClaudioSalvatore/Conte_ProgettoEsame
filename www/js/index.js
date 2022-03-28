@@ -20,12 +20,14 @@
 // Wait for the deviceready event before using any of Cordova's device APIs.
 // See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
 document.addEventListener('deviceready', onDeviceReady, false);
+let map;
 
 function onDeviceReady() {
     // Cordova is now initialized. Have fun!
     mappa();
     $("#btnBarcode").on("click", barcodeScanner);
-    StatusBar.show();    
+    $("#txtSearchBox").on("focus", suggerimenti);
+    StatusBar.show();
 }
 
 function barcodeScanner(){
@@ -60,7 +62,7 @@ function mappa(){
           let coord = [7.7362988,44.5550253];
           console.log(coord);
           //Visualizzo la mappa centrata su narzole
-          var map = new ol.Map({
+          map = new ol.Map({
             target: 'map',
             layers: [
               new ol.layer.Tile({
@@ -78,115 +80,5 @@ function mappa(){
         }  
     });
 }
-function mostraProdotto(result){
-  let modal = $("#modal");
-  let modalBody = $("#modalBody");
-  let modalTitle = $("#modalTitle");
-  let url = "https://world.openfoodfacts.org/api/v0/product/" + result.text + ".json"
-  $.ajax({
-    url:url,
-    dataType: "json",
-    method:"get",
-    success: function(data){
-      data=data.product;
-      if(data.generic_name!= undefined)
-        modalTitle.text(data.generic_name);
-      else
-        modalTitle.text("Prodotto");
-      
-      creaBodyProdotto(modalBody, data);
-      modal.modal("show");
-    },
-    error:function(err){
-      modalBody.text(JSON.stringify(err));
-      modalTitle.text("errore");
-      modal.modal("show");
-    }
-  })
-}
-function creaBodyProdotto(modalBody, data){
-  let divIngredienti = $("<div></div>");
-  modalBody.html("")
-  let nutrientsTable = $("<table></table>");
-  let divProdotto = $("<div></div>");
-  
-  modalBody.append(
-    divProdotto.addClass("row").append(
-      $("<div></div>").addClass("col-md-5").append(
-        $("<img>").addClass("img-responsive").css({
-          width: "100%"
-        }).attr("src",data.image_front_url)
-      )
-    )
-  )
 
-  if(data.ingredients_text != undefined){
-    divIngredienti.text(data.ingredients_text);
-    divProdotto.append(
-      $("<div></div>").addClass('col-md-7').append(
-        $("<div></div>").append(
-          $("<h4></h4>").text("Ingredienti: ")
-        ).append(divIngredienti)
-      )
-    )
-  }
-  let nutriments = data.nutriments;
-  if(nutriments!= undefined){
-    nutrientsTable.addClass("table");
-    nutrientsTable.append(
-      $("<thead></thead>").append(
-        $("<th></th>").text("Nutriente")
-      ).append(
-        $("<th></th>").text("Valore")
-      )
-    ).appendTo(modalBody);
-    let tblBody = $("<tbody></tbody>");
 
-    let tr = $("<tr></tr>");
-    tr.append($("<td></td>").text("Energia").css({fontWeight:"bold"}));
-    tr.append($("<td></td>").text(nutriments.energy + " J (" + nutriments["energy-kcal"] + " kcal)"));
-    tr.appendTo(tblBody);
-
-    for(let nutriment in nutriments){
-      if(
-        nutriment.split("_").length == 1 && 
-        !nutriment.includes("energy") &&
-        !nutriment.includes("nova-group") &&
-        !nutriment.includes("nutrition-score-fr") &&
-        !nutriment.includes("saturated-fat")
-        ){
-        tr = $("<tr></tr>");
-        tr.append($("<td></td>").text(italiano(nutriment)).css({fontWeight:"bold"}));
-        let nutrimentText = nutriments[nutriment];
-        if(nutriments[nutriment+ "_unit"]!=undefined)
-          nutrimentText += " " + nutriments[nutriment + "_unit"];
-        if(nutriment.includes("fat") && nutriments["saturated-fat"]!=undefined){
-          nutrimentText += " (di cui saturi: " + nutriments["saturated-fat"] + ")";
-        }
-        tr.append($("<td></td>").text(nutrimentText));
-        tr.appendTo(tblBody);
-      }
-    }
-    tblBody.appendTo(nutrientsTable);
-  }
-}
-function italiano(val){
-  switch(val){
-    case "carbohydrates":
-      return "Carboidrati";
-    case "fat":
-      return "Grassi";
-    case "fiber":
-      return "Fibre";
-    case "proteins":
-      return "Proteine";
-    case "salt":
-      return "Sale";
-    case "sodium":
-      return "Sodio";
-    case "sugars":
-      return "Zuccheri";
-    default:
-      return val;
-  }
-}
