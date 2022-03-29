@@ -21,12 +21,17 @@
 // See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
 document.addEventListener("deviceready", onDeviceReady, false);
 let map;
+let positionTracking;
+let btnGps;
+let coords;
 
 function onDeviceReady() {
-  // Cordova is now initialized. Have fun!
   mappa();
   $("#btnBarcode").on("click", barcodeScanner);
   $("#txtSearchBox").on("focus", suggerimenti);
+  btnGps = $("#btnCenterMapOnUser");
+  btnGps.on("click", onGpsButtonClick);
+  btnGps.hide();
   StatusBar.show();
 }
 
@@ -52,58 +57,3 @@ function barcodeScanner() {
   );
 }
 
-function mappa() {
-  $.ajax({
-    url: "https://nominatim.openstreetmap.org/search?format=json&city=Fossano",
-    //data:"{ut:'"+user+"', pwd='"+md5(pwd)+"'}",
-    type: "GET",
-    success: function (data) {
-      console.log(data);
-      navigator.geolocation.getCurrentPosition(
-        function (position) {
-          //prendo le coordinate dell'utente
-          let coords = [position.coords.longitude, position.coords.latitude];
-          console.log(coords);
-          //Visualizzo la mappa centrata sulla mia posizione attuale
-          map = new ol.Map({
-            target: "map",
-            layers: [
-              new ol.layer.Tile({
-                source: new ol.source.OSM(),
-              }),
-            ],
-            view: new ol.View({
-              center: ol.proj.fromLonLat(coords),
-              zoom: 17,
-            }),
-          });
-          //Aggiungo un marker sulla mappa
-          let layerMarker = new ol.layer.Vector({
-            source: new ol.source.Vector({
-              features: [
-                new ol.Feature({
-                  geometry: new ol.geom.Point(ol.proj.fromLonLat(coords)),
-                }),
-              ],
-            }),
-          })
-          map.addLayer(layerMarker);
-        },
-        function (error) {
-          console.log(error);
-          navigator.notification.alert(
-            "Errore nel recupero della posizione\nProva a riavviare l'applicazione o accettare i permessi di localizzazione",
-            null,
-            "Errore",
-            "OK"
-          );
-        },
-        { enableHighAccuracy: true }
-      );
-    },
-    error: function (e) {
-      alert("Error: " + e);
-    },
-  });
-}
-function suggerimenti() {}
