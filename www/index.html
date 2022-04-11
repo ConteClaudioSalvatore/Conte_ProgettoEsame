@@ -50,9 +50,14 @@
                 <img src="./img/search.png" id="icnSearch">
             </div>
             <div id="map" class="map"></div>
-            <button id="btnBarcode">
+            <div class="btnGroup">
+              <button id="btnBarcode">
                 <img src="img/barcode.png">
-            </button>
+              </button>
+              <button id="btnCenterMapOnUser">
+                <img src="img/center.png">
+              </button>
+            </div>
             <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
@@ -71,6 +76,7 @@
         </div>
         <script src="cordova.js"></script>
         <script type="text/javascript" src="js/visualizzaProdotto.js"></script>
+        <script type="text/javascript" src="js/map.js"></script>
         <script src="js/index.js"></script>
     </body>
 </html>
