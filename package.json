@@ -15,6 +15,7 @@
   "devDependencies": {
     "cordova-android": "^10.1.1",
     "cordova-browser": "^6.0.0",
+    "cordova-plugin-dialogs": "^2.0.2",
     "cordova-plugin-geolocation": "^4.1.0",
     "cordova-plugin-qr-barcode-scanner": "^8.0.3",
     "cordova-plugin-statusbar": "^3.0.0"
@@ -27,7 +28,8 @@
       "cordova-plugin-statusbar": {},
       "cordova-plugin-geolocation": {
         "GPS_REQUIRED": "true"
-      }
+      },
+      "cordova-plugin-dialogs": {}
     },
     "platforms": [
       "android",

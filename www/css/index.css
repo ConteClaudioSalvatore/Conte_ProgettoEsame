@@ -45,14 +45,31 @@
 .ol-attribution{
     display: none;
 }
-.ol-rotate{
-    bottom: 1em;
-    left: 1em;
+
+button.mapOrientation{
+    transition: 0.1s;
+    bottom: 1rem;
+    left: 1rem;
+    position: absolute;
+    z-index: 100;
+    background-color: #fff;
+    padding: 2px;
+    border: none;
     border-radius: 50%;
+    box-shadow: 0 0 3px #000a;
+    opacity: 0.8;
 }
-.ol-rotate button{
+button.mapOrientation:active{
+    transition: 0.1s;
+    opacity: 0.5;
+}
+.mapOrientation img{
     border-radius: 50%;
-    background-color: #0099ff62;
+    background-color: #0099ff;
+    border: none;
+    width: 25px;
+    height: 25px;
+    margin: 0;
 }
 .searchbar{
     height: 50px;
