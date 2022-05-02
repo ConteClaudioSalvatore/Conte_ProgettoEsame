@@ -77,7 +77,7 @@ button.mapOrientation:active{
     z-index: 1;
     border-radius: 35px;
     position: absolute;
-    top: 10px;
+    top: 40px;
     left:50%;
     transform: translate(-50%, 0);
     background-color: #fff;

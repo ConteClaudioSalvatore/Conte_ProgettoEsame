@@ -76,7 +76,7 @@ function onMapMove() {
   if(map.getView().getRotation()!=0)
       $(".mapOrientation").fadeIn(200);
   if(
-    (coordsDaConfrontare[1] <centerCoords[1] || 
+    (coordsDaConfrontare[1] < centerCoords[1] || 
     coordsDaConfrontare[1] > centerCoords[1] || 
     coordsDaConfrontare[0] < centerCoords[0] || 
     coordsDaConfrontare[0] > centerCoords[0]) && 
