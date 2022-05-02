@@ -11,6 +11,7 @@ function onDeviceReady() {
   btnGps.on("click", onGpsButtonClick);
   btnGps.hide();
   StatusBar.show();
+  StatusBar.backgroundColorByHexString("#0066ff");
 }
 
 function barcodeScanner() {

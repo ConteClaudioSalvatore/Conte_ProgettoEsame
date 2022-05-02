@@ -70,13 +70,16 @@ function mappa() {
   });
 }
 function onMapMove() {
+  var center = ol.proj.transform(map.getView().getCenter(),'EPSG:3857', 'EPSG:4326');
+  let coordsDaConfrontare = [Math.floor(coords[0]*100000), Math.floor(coords[1]*100000)];
+  let centerCoords = [Math.floor(center[0]*100000), Math.floor(center[1]*100000)];
   if(map.getView().getRotation()!=0)
       $(".mapOrientation").fadeIn(200);
   if(
-    (coords[1]*1000 < map.getView().getCenter()[1]*1000 || 
-    coords[1]*1000 > map.getView().getCenter()[1]*1000 || 
-    coords[0]*1000 < map.getView().getCenter()[0]*1000 || 
-    coords[0]*1000 > map.getView().getCenter()[0]*1000) && 
+    (coordsDaConfrontare[1] <centerCoords[1] || 
+    coordsDaConfrontare[1] > centerCoords[1] || 
+    coordsDaConfrontare[0] < centerCoords[0] || 
+    coordsDaConfrontare[0] > centerCoords[0]) && 
     mapPinned
   ){
     mapPinned = false;
