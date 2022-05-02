@@ -11,14 +11,17 @@ function onDeviceReady() {
   btnGps.on("click", onGpsButtonClick);
   btnGps.hide();
   StatusBar.show();
-  StatusBar.backgroundColorByHexString("#0066ff");
+
+  StatusBar.overlaysWebView(true);
+  StatusBar.styleBlackTranslucent();
+  StatusBar.styleDefault();
 }
 
 function barcodeScanner() {
   cordova.plugins.barcodeScanner.scan(
     mostraProdotto,
     function (error) {
-      
+      navigator.notification.alert("prodotto non trovato");
     },
     {
       preferFrontCamera: false, // iOS and Android
