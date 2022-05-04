@@ -51,7 +51,8 @@ function mappa() {
           //Aggiungo un pulsante per la posizione attuale
           attachMapToCurrentPosition();
           //aggiungo i marker dei supermarket nella città
-          addSupermarketMarkers(map);
+          addSupermarketMarkers();
+          setInterval(addSupermarketMarkers, 10000);
           map.on('click', function (evt) {
             const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
                 return feature;
@@ -129,7 +130,7 @@ function attachMapToCurrentPosition() {
     { enableHighAccuracy: true, timeout: 5000, maximumAge: 5000 }
   );
 }
-function addSupermarketMarkers(map){
+function addSupermarketMarkers(){
   //prendo la città dalle coordinate dell'utente
   $.ajax({
     url: "https://nominatim.openstreetmap.org/reverse?format=json&lat="+coords[1]+"&lon="+coords[0],
@@ -152,13 +153,14 @@ function addSupermarketMarkers(map){
           marker.name = supermarket.display_name.split(",")[0].trim();
           vectorSource.addFeature(marker);
         }) 
-        console.log(vectorSource);
         var markerLayer = new ol.layer.Vector({
           visible: true,
           source: vectorSource
         });
+        if(map.getLayers().getLength()>2){
+          map.removeLayer(map.getLayers().item(2));
+        }
         map.addLayer(markerLayer);
-        
       });
     },
     error: function (e) {
