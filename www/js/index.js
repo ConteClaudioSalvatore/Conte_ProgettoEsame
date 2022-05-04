@@ -4,6 +4,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 let btnGps;
 
 function onDeviceReady() {
+  alert = navigator.notification.alert;
   mappa();
   $("#btnBarcode").on("click", barcodeScanner);
   $("#txtSearchBox").on("focus", suggerimenti);
@@ -11,9 +12,7 @@ function onDeviceReady() {
   btnGps.on("click", onGpsButtonClick);
   btnGps.hide();
   StatusBar.show();
-
   StatusBar.overlaysWebView(true);
-  StatusBar.styleBlackTranslucent();
   StatusBar.styleDefault();
 }
 
@@ -21,7 +20,7 @@ function barcodeScanner() {
   cordova.plugins.barcodeScanner.scan(
     mostraProdotto,
     function (error) {
-      navigator.notification.alert("prodotto non trovato");
+      alert("prodotto non trovato");
     },
     {
       preferFrontCamera: false, // iOS and Android

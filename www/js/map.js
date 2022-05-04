@@ -7,6 +7,7 @@ let supermarketInfo;
 let marker;
 function mappa() {
   $(".mapOrientation").hide();
+  
   $.ajax({
     url: "https://nominatim.openstreetmap.org/search?format=json&countrycodes=it",
     type: "GET",
@@ -51,6 +52,14 @@ function mappa() {
           attachMapToCurrentPosition();
           //aggiungo i marker dei supermarket nella città
           addSupermarketMarkers(map);
+          map.on('click', function (evt) {
+            const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+                return feature;
+            });
+            if (feature) {
+                alert("Cliccato: " + feature.name);
+            }
+          });
         },
         function (error) {
           console.log(error);
@@ -68,6 +77,7 @@ function mappa() {
       alert("Error: " + e);
     },
   });
+  
 }
 function onMapMove() {
   var center = ol.proj.transform(map.getView().getCenter(),'EPSG:3857', 'EPSG:4326');
@@ -116,7 +126,7 @@ function attachMapToCurrentPosition() {
         "OK"
       );
     },
-    { enableHighAccuracy: true, timeout: 3000, maximumAge: 3000 }
+    { enableHighAccuracy: true, timeout: 5000, maximumAge: 5000 }
   );
 }
 function addSupermarketMarkers(map){
@@ -125,21 +135,11 @@ function addSupermarketMarkers(map){
     url: "https://nominatim.openstreetmap.org/reverse?format=json&lat="+coords[1]+"&lon="+coords[0],
     type: "GET",
     success: function (data) {
-      let posInfo = {
-        cityName :data.address.city,
-        village : data.address.village,
-        regione : data.address.state
-      }
-      
-      console.log("regione: " + posInfo.regione);
-      console.log("città: " + posInfo.cityName);
-      console.log("paese: " + posInfo.village);
-      getSupermarkets(posInfo.cityName, posInfo.regione, posInfo.village).then(function (sm) {
+      getSupermarkets(data).then(function (sm) {
         var vectorSource = new ol.source.Vector({
           features: []
         });
         sm.forEach(supermarket => {
-          console.log("supermarket: " , supermarket);
           var markerStyle = new ol.style.Icon(({
             src: 'img/shop.png',
           }));
@@ -149,6 +149,7 @@ function addSupermarketMarkers(map){
           marker.setStyle(new ol.style.Style({
             image: markerStyle,
           }));
+          marker.name = supermarket.display_name.split(",")[0].trim();
           vectorSource.addFeature(marker);
         }) 
         console.log(vectorSource);
@@ -157,6 +158,7 @@ function addSupermarketMarkers(map){
           source: vectorSource
         });
         map.addLayer(markerLayer);
+        
       });
     },
     error: function (e) {
@@ -164,15 +166,23 @@ function addSupermarketMarkers(map){
     }
   });
 }
-async function getSupermarkets(cityName, regione, village){
+async function getSupermarkets(data){
+  let posInfo = data.address;
+  console.log(posInfo);
   let url = "https://nominatim.openstreetmap.org/search?format=json&countrycodes=it&q="
-  if(village!=undefined){
-    url+=village.split(' ').join('+');
+  if(posInfo.village!=undefined){
+    console.log(posInfo.village);
+    url+=posInfo.village.split(' ').join('+')+"+";
   }
-  else{
-    url+=cityName.split(' ').join('+');
+  if(posInfo.city!=undefined){
+    console.log(posInfo.city);
+    url+=posInfo.city.split(' ').join('+')+"+";
   }
-  url+="+supermercato&state="+regione.split(' ').join('+');
+  if(posInfo.town!=undefined){
+    console.log(posInfo.town);
+    url+=posInfo.town.split(' ').join('+')+"+";
+  }
+  url+="supermercato&state="+posInfo.state.split(' ').join('+');
   return await $.ajax({
     url: url,
     type: "GET",
@@ -181,4 +191,5 @@ async function getSupermarkets(cityName, regione, village){
     }
   })
 }
+
 
