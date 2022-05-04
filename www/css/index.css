@@ -45,7 +45,9 @@
 .ol-attribution{
     display: none;
 }
-
+.ol-rotate{
+    display: none !important;
+}
 button.mapOrientation{
     transition: 0.1s;
     bottom: 1rem;
