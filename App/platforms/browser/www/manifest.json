@@ -1,0 +1,11 @@
+{
+  "background_color": "#FFF",
+  "display": "standalone",
+  "name": "Dove Comprare",
+  "short_name": "Dove Comprare",
+  "version": "claudiosalvatore.conte.dove_conviene",
+  "description": "App per cercare dove conviene un certo prodotto",
+  "author": "Conte Claudio Salvatore",
+  "icons": [],
+  "start_url": "index.html"
+}
