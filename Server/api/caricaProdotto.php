@@ -1,8 +1,9 @@
 <?php
+    require("databaseCredentials.php");  
     header("Access-Control-Allow-Origin: *");
 	header("Access-Control-Allow-Headers: *");
 	header("Content-Type: application/json; charset=UTF-8");
-    $con = new mysqli("localhost", "root", "", "dbdoveconviene");
+    $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
     /*Controlla se il codice di errore è diverso da 0*/
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);

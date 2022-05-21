@@ -1,27 +1,57 @@
 function mostraProdotto(result) {
+  if(result.cancelled!=undefined){
+    alert("Prodotto non trovato");
+    return;
+  }
   let modal = $("#modal");
   let modalBody = $("#modalBody");
   let modalTitle = $("#modalTitle");
-  let url =
+  let url = "https://cludioconte.altrevista.org/api/searchProdotto.php";
+  let postParams = {barcode:result.text};
+  let urlOpenFoodFacts = 
     "https://it.openfoodfacts.org/api/v0/product/" + result.text + ".json";
+
   $.ajax({
     url: url,
-    dataType: "json",
-    method: "get",
+    method: "post",
+    data: postParams,
     success: function (data) {
-      data = data.product;
-      if (data.generic_name != undefined) modalTitle.text(data.generic_name);
-      else modalTitle.text("Prodotto");
-
-      creaBodyProdotto(modalBody, data);
-      modal.modal("show");
+      if(data.product!=undefined) {
+        data = data.product;
+        if (data.generic_name != undefined) modalTitle.text(data.generic_name);
+        else modalTitle.text("Prodotto");
+  
+        creaBodyProdotto(modalBody, data);
+        modal.modal("show");
+      }else{
+        $.ajax({
+          url: urlOpenFoodFacts,
+          dataType: "json",
+          method: "get",
+          success: function (data) {
+            if(data.status!=0){
+              data = data.product;
+              if (data.generic_name != undefined) modalTitle.text(data.generic_name);
+              else modalTitle.text("Prodotto");
+        
+              creaBodyProdotto(modalBody, data);
+              modal.modal("show");
+            }else{
+              alert("Prodotto non trovato");
+            }
+          },
+          error: function (err) {
+            alert("Errore \nPotresti essere offline.")
+          },
+        });
+      }
+      
     },
     error: function (err) {
-      modalBody.text(JSON.stringify(err));
-      modalTitle.text("errore");
-      modal.modal("show");
+      alert("Errore \nPotresti essere offline.")
     },
   });
+  
 }
 
 function creaBodyProdotto(modalBody, data) {

@@ -1,15 +1,21 @@
 <?php
+    require("databaseCredentials.php");  
     header("Access-Control-Allow-Origin: *");
 	header("Access-Control-Allow-Headers: *");
 	header("Content-Type: application/json; charset=UTF-8");
-    $con = new mysqli("localhost", "root", "", "dbdoveconviene");
+    $con = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
     /*Controlla se il codice di errore è diverso da 0*/
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
 	$postdata = file_get_contents("php://input");
 	$param = json_decode($postdata);
     $nomeProdotto = $param->nomeProdotto;
-    $sql = "select * from prodotti where generic_name like '$nomeProdotto%' limit 25";
+    $barcode = $param->barcode;
+    $sql = "";
+    if($nomeProdotto != null)
+        $sql = "select * from prodotti where generic_name like '$nomeProdotto%' limit 25";
+    else
+        $sql = "select * from prodotti where id=$barcode";
     /*Il metodo query lancia la query sql e restituisce il recordset corrispondente*/
     $rs = $con->query($sql);
     /*Controlla se il recordset esiste o no cioè se ci sono stati degli errori*/

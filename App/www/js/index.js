@@ -2,9 +2,12 @@
 document.addEventListener("deviceready", onDeviceReady, false);
 
 let btnGps;
+let suggestions = $("#seggestions");
+var searchBar = $(".searchBar");
 
 function onDeviceReady() {
   alert = navigator.notification.alert;
+  suggestions.hide();
   mappa();
   $("#btnBarcode").on("click", barcodeScanner);
   $("#txtSearchBox").on("focus", suggerimenti);
@@ -38,5 +41,34 @@ function barcodeScanner() {
   );
 }
 function suggerimenti() {
-  
+  $.ajax({
+    url: "https://claudioconte.altervista.org/api/searchProdotto.php",
+    method: "POST",
+    data: {
+      nomeProdotto: searchBar.val()
+    },
+    success: function (data) {
+      if(data.product.length > 0){
+        data.product.forEach(product=>{
+          suggestions.append(
+            $("<div></div>").addClass("row").append(
+              $("<div></div>").addClass("col-12").append(
+                $("<span></span>")
+                .text(product.generic_name)
+                .on("click", function (e) {
+                  var nomeProdotto = e.target.innerText;
+                  searchBar.val(nomeProdotto);
+                  suggestions.hide();
+                  mostraProdotto(nomeProdotto);
+                })
+              )
+            )
+          )
+        })
+        suggestions.show();
+      }else{
+        suggestions.hide();
+      }
+    }
+  })
 }
