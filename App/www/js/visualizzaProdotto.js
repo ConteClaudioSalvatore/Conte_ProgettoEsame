@@ -1,12 +1,11 @@
 function mostraProdotto(result) {
-  if(result.cancelled!=undefined){
-    alert("Prodotto non trovato");
+  if(result.cancelled){
     return;
   }
   let modal = $("#modal");
   let modalBody = $("#modalBody");
   let modalTitle = $("#modalTitle");
-  let url = "https://cludioconte.altrevista.org/api/searchProdotto.php";
+  let url = "https://claudioconte.altervista.org/api/searchProdotto.php";
   let postParams = {barcode:result.text};
   let urlOpenFoodFacts = 
     "https://it.openfoodfacts.org/api/v0/product/" + result.text + ".json";
@@ -16,11 +15,14 @@ function mostraProdotto(result) {
     method: "post",
     data: postParams,
     success: function (data) {
+      console.log("datadb", data)
       if(data.product!=undefined) {
         data = data.product;
+        data = JSON.parse(data);
+        data = data[0];
         if (data.generic_name != undefined) modalTitle.text(data.generic_name);
         else modalTitle.text("Prodotto");
-  
+        data.nutriments = JSON.parse(data.nutriments);
         creaBodyProdotto(modalBody, data);
         modal.modal("show");
       }else{
@@ -29,11 +31,12 @@ function mostraProdotto(result) {
           dataType: "json",
           method: "get",
           success: function (data) {
+            console.log("data api", data)
             if(data.status!=0){
               data = data.product;
               if (data.generic_name != undefined) modalTitle.text(data.generic_name);
               else modalTitle.text("Prodotto");
-        
+              inserisciProdottoSuDB(data);
               creaBodyProdotto(modalBody, data);
               modal.modal("show");
             }else{
@@ -75,7 +78,7 @@ function creaBodyProdotto(modalBody, data) {
     )
   );
   if (data.ingredients_text != undefined) {
-    divIngredienti.text(data.ingredients_text);
+    divIngredienti.html(data.ingredients_text);
     divProdotto.append(
       $("<div></div>")
         .addClass("col-md-7")
@@ -155,4 +158,29 @@ function italiano(val) {
     default:
       return val;
   }
+}
+function inserisciProdottoSuDB(data){
+  let url = "https://claudioconte.altervista.org/api/caricaProdotto.php";
+  let postParams = {
+    barcode: data.code,
+    generic_name: data.generic_name,
+    keywords: data.keywords,
+    categories: data.categories,
+    creator: data.creator,
+    image_front_url: data.image_front_url,
+    ingredients_text: data.ingredients_text,
+    nutriments: JSON.stringify(data.nutriments)
+  };
+  $.ajax({
+    url: url,
+    method: "post",
+    data: postParams,
+    success: function (data) {
+      console.log(data);
+    },
+    error: function (err) {
+      alert("Errore \nPotresti essere offline.");
+      console.log(err);
+    }
+  });
 }

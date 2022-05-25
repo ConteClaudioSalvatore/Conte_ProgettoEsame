@@ -57,7 +57,7 @@ function suggerimenti() {
                 .text(product.generic_name)
                 .on("click", function (e) {
                   var nomeProdotto = e.target.innerText;
-                  searchBar.val(nomeProdotto);
+                  alert(nomeProdotto);
                   suggestions.hide();
                   mostraProdotto(nomeProdotto);
                 })

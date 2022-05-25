@@ -8,44 +8,45 @@
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
 	$postdata = file_get_contents("php://input");
-	$param = json_decode($postdata);
-    $barcode = $param->code;
-    $keywords = $param->keywords;
-    $categories = $param->categories;
-    $creator = $param->creator;
-    $created_t = floor(microtime(true) * 1000);
-    $generic_name = $param->generic_name;
-    $image_front_url = $param->image_front_url;
-    $ingredients_text = $param->ingredients_text;
-    $nutriments->json_encode($param->nutriments);
+
     $sql = "insert into prodotti(id, ";
-    if($keywords != null)
+    if($_POST['keywords'] != null)
         $sql .= "keywords, ";
-    if($categories != null)
+    if($_POST['categories'] != null)
         $sql .= "categories, ";
     $sql.="creator, created_t, generic_name, image_front_url, ingredients_text, nutriments) ";
-    $sql.="values(:id,";
-    if($keywords != null)
-        $sql .= ":keywords, ";
-    if($categories != null)
-        $sql .= ":categories, ";
-    $sql.=":creator,:created_t,:generic_name,:image_front_url,:ingredients_text, :nutriments)";
+    $sql.="values(?,";
+    if($_POST['keywords'] != null)
+        $sql .= "?, ";
+    if($_POST['categories'] != null)
+        $sql .= "?, ";
+    $sql.="?,?,?,?,?,?)";
     $stmt = $con->prepare($sql);
-    $stmt->bind_param(":id", $id);
-    if($keywords != null)
-        $stmt->bind_param(":keywords", $keywords);
-    if($categories != null)
-        $stmt->bind_param(":categories", $categories);
-    $stmt->bind_param(":creator", $creator);
-    $stmt->bind_param(":created_t", $created_t);
-    $stmt->bind_param(":generic_name", $generic_name);
-    $stmt->bind_param(":image_front_url", $image_front_url);
-    $stmt->bind_param(":ingredients_text", $ingredients_text);
-    $stmt->bind_param(":nutriments", $nutriments);
+    if($_POST['keywords'] != null){
+        if($_POST['categories'] != null)
+            $stmt->bind_param("sssissss", $barcode, $categories, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments);
+        else
+            $stmt->bind_param("ssssissss", $barcode, $keywords, $categories, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments);
+        }
+        
+    else if($_POST['categories'] != null)
+        $stmt->bind_param("sssissss",$barcode, $categories, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments);
+    else
+        $stmt->bind_param("ssisss", $barcode, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments);
+    $barcode = $_POST['barcode'];
+    $keywords = $_POST['keywords'];
+    $categories = $_POST['categories'];
+    $creator = $_POST['creator'];
+    $created_t = floor(microtime(true) * 1000);
+    $generic_name = $_POST['generic_name'];
+    $image_front_url = $_POST['image_front_url'];
+    $ingredients_text = $_POST['ingredients_text'];
+    $nutriments = $_POST['nutriments'];
     if($stmt->execute())
         echo "Prodotto inserito correttamente";
     else
         echo "Errore nell'inserimento del prodotto";
+    echo $stmt->error;
     $stmt->close();
     $con->close();
 ?>

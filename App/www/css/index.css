@@ -105,3 +105,16 @@ button.mapOrientation:active{
     top: 0;
     right: 10px;
 }
+#modalBody{
+    height: 70vh;
+    overflow-y: auto;
+}
+.modal{
+    margin-top: 5vh;
+}
+.modal .modal-content{
+    border-radius: 25px !important;
+}
+.modal .modal-footer .btn-danger{
+    border-radius: 50px !important;
+}

@@ -27,16 +27,16 @@ SET time_zone = "+00:00";
 -- Struttura della tabella `prodotti`
 --
 
-CREATE TABLE `prodotti` (
-  `id` bigint(20) NOT NULL COMMENT 'codice a barre',
+CREATE TABLE if not exists `prodotti` (
+  `id` varchar(20) NOT NULL COMMENT 'codice a barre',
   `keywords` varchar(500) DEFAULT NULL COMMENT 'chiavi di ricerca',
   `categories` varchar(500) DEFAULT NULL COMMENT 'categorie',
   `creator` varchar(100) NOT NULL COMMENT 'creatore del record',
   `created_t` bigint(20) NOT NULL COMMENT 'data di creazione del record',
   `generic_name` varchar(100) NOT NULL COMMENT 'nome prodotto',
-  `image_front_url` int(200) NOT NULL COMMENT 'immagine del prodotto',
+  `image_front_url` varchar(200) NOT NULL COMMENT 'immagine del prodotto',
   `ingredients_text` varchar(500) NOT NULL COMMENT 'ingredienti',
-  `nutriments` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'nutrienti' CHECK (json_valid(`nutriments`)),
+  `nutriments` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'nutrienti',
   `last_editor` varchar(100) DEFAULT NULL COMMENT 'ultimo aoutore modifica',
   `last_edited_t` bigint(20) DEFAULT NULL COMMENT 'data ultima modifica'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -47,9 +47,9 @@ CREATE TABLE `prodotti` (
 -- Struttura della tabella `prodotti_supermercati`
 --
 
-CREATE TABLE `prodotti_supermercati` (
+CREATE TABLE if not exists `prodotti_supermercati` (
   `id` int(11) NOT NULL,
-  `codice_a_barre` bigint(20) NOT NULL,
+  `codice_a_barre` varchar(20) NOT NULL,
   `codice_supermercato` varchar(500) NOT NULL,
   `prezzo` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

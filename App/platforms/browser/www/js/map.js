@@ -17,7 +17,7 @@ function mappa() {
         function (position) {
           //prendo le coordinate dell'utente
           coords = [position.coords.longitude, position.coords.latitude];
-          console.log(coords);
+          //console.log(coords);
           //Visualizzo la mappa centrata sulla mia posizione attuale
           map = new ol.Map({
             target: "map",
@@ -174,18 +174,18 @@ function addSupermarketMarkers(){
 }
 async function getSupermarkets(data){
   let posInfo = data.address;
-  console.log(posInfo);
+  //console.log(posInfo);
   let url = "https://nominatim.openstreetmap.org/search?format=json&countrycodes=it&q="
   if(posInfo.village!=undefined){
-    console.log(posInfo.village);
+    //console.log(posInfo.village);
     url+=posInfo.village.split(' ').join('+')+"+";
   }
   if(posInfo.city!=undefined){
-    console.log(posInfo.city);
+    //console.log(posInfo.city);
     url+=posInfo.city.split(' ').join('+')+"+";
   }
   if(posInfo.town!=undefined){
-    console.log(posInfo.town);
+    //console.log(posInfo.town);
     url+=posInfo.town.split(' ').join('+')+"+";
   }
   url+="supermercato&state="+posInfo.state.split(' ').join('+');

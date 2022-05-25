@@ -1,27 +1,59 @@
 function mostraProdotto(result) {
+  if(result.cancelled){
+    return;
+  }
   let modal = $("#modal");
   let modalBody = $("#modalBody");
   let modalTitle = $("#modalTitle");
-  let url =
+  let url = "https://claudioconte.altervista.org/api/searchProdotto.php";
+  let postParams = {barcode:result.text};
+  let urlOpenFoodFacts = 
     "https://it.openfoodfacts.org/api/v0/product/" + result.text + ".json";
+
   $.ajax({
     url: url,
-    dataType: "json",
-    method: "get",
+    method: "post",
+    data: postParams,
     success: function (data) {
-      data = data.product;
-      if (data.generic_name != undefined) modalTitle.text(data.generic_name);
-      else modalTitle.text("Prodotto");
-
-      creaBodyProdotto(modalBody, data);
-      modal.modal("show");
+      console.log("datadb", data)
+      if(data.product!=undefined) {
+        data = data.product;
+        data = JSON.parse(data);
+        if (data.generic_name != undefined) modalTitle.text(data.generic_name);
+        else modalTitle.text("Prodotto");
+        data.nutriments = JSON.parse(data.nutriments);
+        creaBodyProdotto(modalBody, data);
+        modal.modal("show");
+      }else{
+        $.ajax({
+          url: urlOpenFoodFacts,
+          dataType: "json",
+          method: "get",
+          success: function (data) {
+            console.log("data api", data)
+            if(data.status!=0){
+              data = data.product;
+              if (data.generic_name != undefined) modalTitle.text(data.generic_name);
+              else modalTitle.text("Prodotto");
+              inserisciProdottoSuDB(data);
+              creaBodyProdotto(modalBody, data);
+              modal.modal("show");
+            }else{
+              alert("Prodotto non trovato");
+            }
+          },
+          error: function (err) {
+            alert("Errore \nPotresti essere offline.")
+          },
+        });
+      }
+      
     },
     error: function (err) {
-      modalBody.text(JSON.stringify(err));
-      modalTitle.text("errore");
-      modal.modal("show");
+      alert("Errore \nPotresti essere offline.")
     },
   });
+  
 }
 
 function creaBodyProdotto(modalBody, data) {
@@ -125,4 +157,29 @@ function italiano(val) {
     default:
       return val;
   }
+}
+function inserisciProdottoSuDB(data){
+  let url = "https://claudioconte.altervista.org/api/caricaProdotto.php";
+  let postParams = {
+    barcode: data.code,
+    generic_name: data.generic_name,
+    keywords: data.keywords,
+    categories: data.categories,
+    creator: data.creator,
+    image_front_url: data.image_front_url,
+    ingredients_text: data.ingredients_text,
+    nutriments: JSON.stringify(data.nutriments)
+  };
+  $.ajax({
+    url: url,
+    method: "post",
+    data: postParams,
+    success: function (data) {
+      console.log(data);
+    },
+    error: function (err) {
+      alert("Errore \nPotresti essere offline.");
+      console.log(err);
+    }
+  });
 }

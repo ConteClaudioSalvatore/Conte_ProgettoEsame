@@ -7,15 +7,13 @@
     /*Controlla se il codice di errore è diverso da 0*/
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
-	$postdata = file_get_contents("php://input");
-	$param = json_decode($postdata);
-    $nomeProdotto = $param->nomeProdotto;
-    $barcode = $param->barcode;
+    $nomeProdotto = $_POST['nomeProdotto'];
+    $barcode = $_POST['barcode'];
     $sql = "";
     if($nomeProdotto != null)
-        $sql = "select * from prodotti where generic_name like '$nomeProdotto%' limit 25";
+        $sql = "select * from prodotti where generic_name like '$nomeProdotto'% limit 25";
     else
-        $sql = "select * from prodotti where id=$barcode";
+        $sql = "select * from prodotti where id='$barcode'";
     /*Il metodo query lancia la query sql e restituisce il recordset corrispondente*/
     $rs = $con->query($sql);
     /*Controlla se il recordset esiste o no cioè se ci sono stati degli errori*/
@@ -31,7 +29,6 @@
         $vect = [];
         while ($record = $rs->fetch_assoc())
             array_push($vect, $record);
-        $json->code = $vect["id"];
         $json->product = json_encode($vect);
         echo json_encode($json);
     }
