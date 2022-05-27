@@ -12,7 +12,6 @@ function mappa() {
     url: "https://nominatim.openstreetmap.org/search?format=json&countrycodes=it",
     type: "GET",
     success: function (data) {
-      console.log(data);
       navigator.geolocation.getCurrentPosition(
         function (position) {
           //prendo le coordinate dell'utente

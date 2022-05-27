@@ -99,9 +99,29 @@ button.mapOrientation:active{
     font-size: 30px;
 }
 .searchbar img{
-    width: 45px;
-    height: 45px;
+    width: 35px;
+    height: 35px;
     position: absolute;
     top: 0;
     right: 10px;
+    margin: 5px;
+}
+#modalBody{
+    height: 70vh;
+    overflow-y: auto;
+}
+.modal{
+    margin-top: 5vh;
+}
+.modal .modal-header .modal-title{
+    text-align: center;
+}
+.modal .modal-footer{
+    justify-content: center;
+}
+.modal .modal-content{
+    border-radius: 25px !important;
+}
+.modal .modal-footer .btn-danger{
+    border-radius: 50px !important;
 }

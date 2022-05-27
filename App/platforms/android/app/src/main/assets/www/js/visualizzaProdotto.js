@@ -40,7 +40,12 @@ function mostraProdotto(result) {
               creaBodyProdotto(modalBody, data);
               modal.modal("show");
             }else{
-              alert("Prodotto non trovato");
+              navigator.notification.confirm(
+                'Il prodotto scansionato non esiste.\nVuoi aggiungerlo?',// message
+                nuovoProdotto.bind(this, result.text),                   // callback to invoke with index of button pressed
+                'Prodotto non Trovato',                                  // title
+                ['Si','No']                                              // buttonLabels
+            );        
             }
           },
           error: function (err) {
@@ -175,11 +180,327 @@ function inserisciProdottoSuDB(data){
     url: url,
     method: "post",
     data: postParams,
+    dataType: "json",
     success: function (data) {
       console.log(data);
     },
     error: function (err) {
       alert("Errore \nPotresti essere offline.");
+      console.log(err);
+    }
+  });
+}
+function nuovoProdotto(code, buttonIndex) {
+  if (buttonIndex == 1) {
+    let modal = $("#modal");
+    let modalBody = $("#modalBody");
+    let modalTitle = $("#modalTitle");
+    modalBody.empty();
+    modalTitle.text("Nuovo Prodotto");
+    modalBody
+    .append(
+      $("<span></span>")
+      .addClass("text-center")
+      .text("Codice: ")
+      .append(
+        $("<strong></strong>")
+        .text(code)
+        .attr("id", "barcode")
+      )
+    )
+    .append(
+      $("<div></div>")
+      .addClass("form-group")
+      .append(
+        $("<label></label>")
+        .attr("for", "txtNomeProdotto")
+        .text("Nome Prodotto")
+        .addClass("form-label")
+      )
+      .append(
+        $("<input>")
+        .attr("type", "text")
+        .attr("id", "txtNomeProdotto")
+        .attr("placeholder", "Nome Prodotto")
+        .addClass("form-control")
+      )
+    )
+    .append(
+      $("<div></div>")
+      .addClass("form-group")
+      .append(
+        $("<label></label>")
+        .attr("for", "txtCategorie")
+        .text("Categoria")
+        .addClass("form-label")
+      )
+      .append(
+        $("<input>")
+        .attr("type", "text")
+        .attr("id", "txtCatetorie")
+        .attr("placeholder", "categoria1, categoria2, ...")
+        .addClass("form-control")
+      )
+    )
+    .append(
+      $("<div></div>")
+      .addClass("form-group")
+      .append(
+        $("<label></label>")
+        .attr("for", "txtKeywords")
+        .text("Chiavi di Ricerca")
+        .addClass("form-label")
+      )
+      .append(
+        $("<input>")
+        .attr("type", "text")
+        .attr("id", "txtKeywords")
+        .attr("placeholder", "chiave1, chiave2, chiave3, ...")
+        .addClass("form-control")
+      )
+    )
+    .append(
+      $("<div></div>")
+      .addClass("form-group mt-2")
+      .append(
+        $("<span></span>")
+        .text("Valori Nutrizionali (100g): ")
+      )
+      .append(
+        $("<table></table>")
+        .addClass("table")
+        .append(
+          $("<thead></thead>")
+          .append(
+            $("<th></th>")
+            .append(
+              $("<td></td>")
+              .text("Nutriente")
+            )
+            .append(
+              $("<td></td>")
+              .text("Valore")
+            )
+          )
+        )
+        .append(
+          $("<tbody></tbody>")
+          .attr("id", "tblNutrienti")
+          .append(
+            $("<tr></tr>")
+            .append(
+              $("<td></td>")
+              .text("Energia (kJ)")
+            )
+            .append(
+              $("<td></td>")
+              .append(
+                $("<input>")
+                .attr("type", "number")
+                .attr("id", "txtEnergiaJ")
+                .attr("placeholder", "0")
+                .addClass("form-control")
+              )
+            )
+          )
+          .append(
+            $("<tr></tr>")
+            .append(
+              $("<td></td>")
+              .text("Energia (kcal)")
+            )
+            .append(
+              $("<td></td>")
+              .append(
+                $("<input>")
+                .attr("type", "number")
+                .attr("id", "txtEnergiaKcal")
+                .attr("placeholder", "0")
+                .addClass("form-control")
+              )
+            )
+          )
+          .append(
+            $("<tr></tr>")
+            .append(
+              $("<td></td>")
+              .text("Grassi (g)")
+            )
+            .append(
+              $("<td></td>")
+              .append(
+                $("<input>")
+                .attr("pattern", "^\d*(\.\d{0,2})?$")
+                .attr("id", "txtGrassi")
+                .attr("placeholder", "0.00")
+                .addClass("form-control")
+              )
+            )
+          )
+          .append(
+            $("<tr></tr>")
+            .append(
+              $("<td></td>")
+              .text("Grassi Saturi (g)")
+            )
+            .append(
+              $("<td></td>")
+              .append(
+                $("<input>")
+                .attr("pattern", "^\d*(\.\d{0,2})?$")
+                .attr("id", "txtGrassiSaturi")
+                .attr("placeholder", "0.00")
+                .addClass("form-control")
+              )
+            )
+          )
+          .append(
+            $("<tr></tr>")
+            .append(
+              $("<td></td>")
+              .text("Grassi (g)")
+            )
+            .append(
+              $("<td></td>")
+              .append(
+                $("<input>")
+                .attr("pattern", "^\d*(\.\d{0,2})?$")
+                .attr("id", "txtFibre")
+                .attr("placeholder", "0.00")
+                .addClass("form-control")
+              )
+            )
+          )
+          .append(
+            $("<tr></tr>")
+            .append(
+              $("<td></td>")
+              .text("Proteine (g)")
+            )
+            .append(
+              $("<td></td>")
+              .append(
+                $("<input>")
+                .attr("pattern", "^\d*(\.\d{0,2})?$")
+                .attr("id", "txtProteine")
+                .attr("placeholder", "0.00")
+                .addClass("form-control")
+              )
+            )
+          )
+          .append(
+            $("<tr></tr>")
+            .append(
+              $("<td></td>")
+              .text("Sale (g)")
+            )
+            .append(
+              $("<td></td>")
+              .append(
+                $("<input>")
+                .attr("pattern", "^\d*(\.\d{0,2})?$")
+                .attr("id", "txtSale")
+                .attr("placeholder", "0.00")
+                .addClass("form-control")
+              )
+            )
+          )
+        )
+      )
+    )
+    .append(
+      $("<div></div>")
+      .addClass("form-group")
+      .append(
+        $("<label></label>")
+        .attr("for", "txtPrezzo")
+        .text("Prezzo(€)")
+        .addClass("form-label")
+      )
+      .append(
+        $("<input>")
+        .attr("pattern", "^\d*(\.\d{0,2})?$")
+        .attr("id", "txtPrezzo")
+        .attr("placeholder", "0.00")
+        .addClass("form-control")
+      )
+    )
+    .append(
+      $("<div></div>")
+      .addClass("form-group")
+      .append(
+        $("<label></label>")
+        .attr("for", "img")
+        .text("Immagine")
+        .addClass("form-label")
+      )
+      .append(
+        $("<input>")
+        .attr("id", "img")
+        .addClass("form-control")
+      )
+    )
+
+    let modalFooter = $("#modal .modal-footer");
+    modalFooter.empty();
+    modalFooter
+    .append(
+      $("<div></div>")
+      .addClass("btn-group")
+      .append(
+        $("<button></button>")
+        .attr("id", "btnSalva")
+        .addClass("btn btn-success")
+        .attr("data-bs-dismiss", "modal")
+        .text("Salva")
+        .on("click", null)
+      )
+      .append(
+        $("<button></button>")
+        .attr("id", "btnAnnulla")
+        .addClass("btn btn-danger")
+        .text("Annulla")
+        .attr("data-bs-dismiss", "modal")
+        .on("click", function () {
+          $("#modal").modal("hide");
+        })
+      )
+    )
+    modal.modal("show");
+  }
+}
+function salvaNuovoProdotto(){
+  let barcode = $("#barcode").val();
+  let generic_name = $("#txtNome").val();
+  let categories = $("#txtCategorie").val();
+  let keywords = $("#txtKeywords").val();
+  let nutriments = {
+    "energy-kcal": $("#txtEnergiaKcal").val(),
+    "energy": $("#txtEnergiaJ").val(),
+    "fat": $("#txtGrassi").val(),
+    "saturated-fat": $("#txtGrassiSaturi").val(),
+    "fiber": $("#txtFibre").val(),
+    "proteins": $("#txtProteine").val(),
+    "salt": $("#txtSale").val()
+  };
+  let image_url = $("#img").val();
+  let data = {
+    barcode: barcode,
+    generic_name: generic_name,
+    categories: categories,
+    keywords: keywords,
+    nutriments: JSON.stringify(nutriments),
+    image_front_url: image_url
+  };
+  $.ajax({
+    url: "http://localhost:3000/api/caricaProdotto.php",
+    method: "POST",
+    data: data,
+    success: function (data) {
+      console.log(data);
+      alert("Prodotto inserito correttamente!", null, "", "Ok");
+    },
+    error: function (err) {
       console.log(err);
     }
   });

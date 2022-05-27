@@ -19,6 +19,7 @@ function mostraProdotto(result) {
       if(data.product!=undefined) {
         data = data.product;
         data = JSON.parse(data);
+        data = data[0];
         if (data.generic_name != undefined) modalTitle.text(data.generic_name);
         else modalTitle.text("Prodotto");
         data.nutriments = JSON.parse(data.nutriments);
@@ -77,7 +78,7 @@ function creaBodyProdotto(modalBody, data) {
     )
   );
   if (data.ingredients_text != undefined) {
-    divIngredienti.text(data.ingredients_text);
+    divIngredienti.html(data.ingredients_text);
     divProdotto.append(
       $("<div></div>")
         .addClass("col-md-7")
@@ -174,6 +175,7 @@ function inserisciProdottoSuDB(data){
     url: url,
     method: "post",
     data: postParams,
+    dataType: "json",
     success: function (data) {
       console.log(data);
     },

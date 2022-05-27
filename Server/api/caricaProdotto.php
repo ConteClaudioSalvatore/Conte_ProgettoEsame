@@ -43,10 +43,13 @@
     $ingredients_text = $_POST['ingredients_text'];
     $nutriments = $_POST['nutriments'];
     if($stmt->execute())
-        echo "Prodotto inserito correttamente";
+    {
+        $json->message = "Prodotto inserito correttamente";
+        echo json_encode($json);
+    }
     else
         echo "Errore nell'inserimento del prodotto";
-    echo $stmt->error;
+    //$stmt->error;
     $stmt->close();
     $con->close();
 ?>

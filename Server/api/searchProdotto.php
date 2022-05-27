@@ -23,10 +23,11 @@
     if ($rs->num_rows == 0){
         $err->code = 1;
         $err->message = "Nessun prodotto trovato";
-        echo json_encode($err);
+        die(json_encode($err));
     }
     else {
         $vect = [];
+        $json->code = 200;
         while ($record = $rs->fetch_assoc())
             array_push($vect, $record);
         $json->product = json_encode($vect);
