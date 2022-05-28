@@ -34,12 +34,21 @@
     else
         $stmt->bind_param("ssisss", $barcode, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments);
     $barcode = $_POST['barcode'];
-    $keywords = $_POST['keywords'];
-    $categories = $_POST['categories'];
+    if($_POST['keywords'] != "")
+        $keywords = $_POST['keywords'];
+    else
+        $keywords = null;
+    if($_POST['categories'] != "")
+        $categories = $_POST['categories'];
+    else
+        $categories = null;
     $creator = $_POST['creator'];
     $created_t = floor(microtime(true) * 1000);
     $generic_name = $_POST['generic_name'];
-    $image_front_url = $_POST['image_front_url'];
+    if($_POST['image_front_url']!="")
+        $image_front_url = $_POST['image_front_url'];
+    else
+        $image_front_url = null;
     $ingredients_text = $_POST['ingredients_text'];
     $nutriments = $_POST['nutriments'];
     if($stmt->execute())

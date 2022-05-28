@@ -2,6 +2,10 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 .map {
 	width: 100vw;
@@ -107,7 +111,7 @@ button.mapOrientation:active {
 	margin: 5px;
 }
 #modalBody {
-	height: 70vh;
+	height: 75vh;
 	overflow-y: auto;
 }
 .modal {
@@ -122,6 +126,14 @@ button.mapOrientation:active {
 .modal .modal-content {
 	border-radius: 25px !important;
 }
-.modal .modal-footer .btn-group {
-	border-radius: 50px !important;
+.modal .modal-footer .btn-group button:first-child {
+	border-top-left-radius: 50px !important;
+	border-bottom-left-radius: 50px !important;
+}
+.modal .modal-footer .btn-group button:last-child {
+	border-top-right-radius: 50px !important;
+	border-bottom-right-radius: 50px !important;
+}
+.form-group{
+	margin-top: 10px;
 }

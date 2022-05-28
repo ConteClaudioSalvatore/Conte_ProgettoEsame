@@ -34,7 +34,7 @@ CREATE TABLE if not exists `prodotti` (
   `creator` varchar(100) NOT NULL COMMENT 'creatore del record',
   `created_t` bigint(20) NOT NULL COMMENT 'data di creazione del record',
   `generic_name` varchar(100) NOT NULL COMMENT 'nome prodotto',
-  `image_front_url` varchar(200) NOT NULL COMMENT 'immagine del prodotto',
+  `image_front_url` varchar(200) NULL COMMENT 'immagine del prodotto',
   `ingredients_text` varchar(500) NOT NULL COMMENT 'ingredienti',
   `nutriments` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'nutrienti',
   `last_editor` varchar(100) DEFAULT NULL COMMENT 'ultimo aoutore modifica',

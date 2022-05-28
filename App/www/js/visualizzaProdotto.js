@@ -1,3 +1,4 @@
+let imgPath = "";
 function mostraProdotto(result) {
   if(result.cancelled){
     return;
@@ -71,23 +72,40 @@ function creaBodyProdotto(modalBody, data) {
   $("#modal .modal-footer")
   .empty()
   .append(
-    $("<button></button>")
-    .addClass("btn btn-danger")
-    .attr("data-bs-dismiss", "modal")
-    .text("X")
+    $("<div></div>")
+    .addClass("btn-group")
+    .attr("id", "btn")
+    .append(
+      $("<button></button>")
+      .addClass("btn btn-danger")
+      .attr("data-bs-dismiss", "modal")
+      .text("X")
+    )
   );
-  modalBody.append(
-    divProdotto.addClass("row").append(
+  modalBody
+  .append(
+    $("<span></span>")
+    .text("Codice: ")
+    .addClass("text-center my-2")
+    .append(
+      $("<strong></strong>")
+      .text(data.id)
+    )
+  )
+  .append(
+    divProdotto
+    .addClass("row")
+    .append(
       $("<div></div>")
-        .addClass("col-md-5")
-        .append(
-          $("<img>")
-            .addClass("img-responsive")
-            .css({
-              width: "100%",
-            })
-            .attr("src", data.image_front_url)
-        )
+      .addClass("col-md-5")
+      .append(
+        $("<img>")
+        .addClass("img-responsive")
+        .css({
+          width: "100%",
+        })
+        .attr("src", data.image_front_url)
+      )
     )
   );
   if (data.ingredients_text != undefined) {
@@ -280,13 +298,13 @@ function nuovoProdotto(code, buttonIndex) {
         .append(
           $("<thead></thead>")
           .append(
-            $("<th></th>")
+            $("<tr></tr>")
             .append(
-              $("<td></td>")
+              $("<th></th>")
               .text("Nutriente")
             )
             .append(
-              $("<td></td>")
+              $("<th></th>")
               .text("Valore")
             )
           )
@@ -438,6 +456,21 @@ function nuovoProdotto(code, buttonIndex) {
       .addClass("form-group")
       .append(
         $("<label></label>")
+        .attr("for", "cmbSupermercato")
+        .text("Supermercato")
+        .addClass("form-label")
+      )
+      .append(
+        $("<select></select>")
+        .attr("id", "cmbSupermercato")
+        .addClass("form-control")
+      )
+    )
+    .append(
+      $("<div></div>")
+      .addClass("form-group")
+      .append(
+        $("<label></label>")
         .attr("for", "img")
         .text("Immagine")
         .addClass("form-label")
@@ -445,7 +478,12 @@ function nuovoProdotto(code, buttonIndex) {
       .append(
         $("<input>")
         .attr("id", "img")
+        .attr("type", "file")
+        .attr("accept", "image/*;capture=camera")
         .addClass("form-control")
+        .on("change", function(){
+          imgPath = $(this).val();
+        })
       )
     )
 
@@ -455,11 +493,11 @@ function nuovoProdotto(code, buttonIndex) {
     .append(
       $("<div></div>")
       .addClass("btn-group")
+      .attr("id", "btn")
       .append(
         $("<button></button>")
         .attr("id", "btnSalva")
         .addClass("btn btn-success")
-        .attr("data-bs-dismiss", "modal")
         .text("Salva")
         .on("click", null)
       )
@@ -475,13 +513,38 @@ function nuovoProdotto(code, buttonIndex) {
       )
     )
     modal.modal("show");
+
+    let select = $("#cmbSupermercato");
+    select.empty();
+    select.append(
+      $("<option></option>")
+      .attr("value", "")
+      .text("Seleziona un supermercato")
+    );
+    for (let i = 0; i < superMarketsFullNames.length; i++) {
+      let smInfo = superMarketsFullNames[i].split(",");
+      let textValue = smInfo[0];
+      if(Number.isInteger(parseInt(smInfo[1]))) {
+        textValue += ", " + smInfo[2] + " " + smInfo[1];
+      }
+      else {
+        textValue += ", " + smInfo[1];
+      }
+      select.append(
+        $("<option></option>")
+        .attr("value", i)
+        .text(textValue)
+      );
+    }
   }
 }
 function salvaNuovoProdotto(){
-  let barcode = $("#barcode").val();
+  let barcode = $("#barcode").text();
   let generic_name = $("#txtNome").val();
   let categories = $("#txtCategorie").val();
   let keywords = $("#txtKeywords").val();
+  let ingredients = $("#txtIngredienti").val();
+  let prezzo = $("#txtPrezzo").val();
   let nutriments = {
     "energy-kcal": $("#txtEnergiaKcal").val(),
     "energy": $("#txtEnergiaJ").val(),
@@ -491,25 +554,48 @@ function salvaNuovoProdotto(){
     "proteins": $("#txtProteine").val(),
     "salt": $("#txtSale").val()
   };
-  let image_url = $("#img").val();
+  let supermercato = $("#cmbSupermercato").val();
+  let image_url = imgPath;
   let data = {
     barcode: barcode,
     generic_name: generic_name,
     categories: categories,
     keywords: keywords,
     nutriments: JSON.stringify(nutriments),
-    image_front_url: image_url
+    image_front_url: image_url,
+    ingredients: ingredients
   };
-  $.ajax({
-    url: "http://localhost:3000/api/caricaProdotto.php",
-    method: "POST",
-    data: data,
-    success: function (data) {
-      console.log(data);
-      alert("Prodotto inserito correttamente!", null, "", "Ok");
-    },
-    error: function (err) {
-      console.log(err);
-    }
-  });
+  let input = {
+    supermercato: supermercato,
+    prezzo: prezzo,
+    data: data
+  }
+  if(checkInput(input)){
+    $.ajax({
+      url: "https://claudioconte.altervista.org/api/caricaProdotto.php",
+      method: "POST",
+      data: data,
+      success: function (data) {
+        $("#modal").modal("hide");
+        console.log(data);
+        alert("Prodotto inserito correttamente!", null, "", "Ok");
+      },
+      error: function (err) {
+        console.log(err);
+      }
+    });
+  }
+  else {
+    alert("Alcuni campi non sono stati completati!", null, "", "Ok");
+  }
+}
+function checkInput(input){
+  if(
+    input.data.generic_name == "" || 
+    input.data.ingredients == "" || 
+    input.prezzo == "" || 
+    input.supermercato == "" 
+    ){
+    return false;
+  }
 }
