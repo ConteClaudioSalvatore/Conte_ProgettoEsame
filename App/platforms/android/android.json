@@ -1,0 +1,149 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {
+      "res/xml/config.xml": {
+        "parents": {
+          "/*": [
+            {
+              "xml": "<feature name=\"BarcodeScanner\"><param name=\"android-package\" value=\"com.phonegap.plugins.barcodescanner.BarcodeScanner\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"StatusBar\"><param name=\"android-package\" value=\"org.apache.cordova.statusbar.StatusBar\" /><param name=\"onload\" value=\"true\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<preference name=\"StatusBarOverlaysWebView\" value=\"true\" />",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"Geolocation\"><param name=\"android-package\" value=\"org.apache.cordova.geolocation.Geolocation\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"Notification\"><param name=\"android-package\" value=\"org.apache.cordova.dialogs.Notification\" /></feature>",
+              "count": 1
+            }
+          ]
+        }
+      },
+      "AndroidManifest.xml": {
+        "parents": {
+          "/manifest/application": [
+            {
+              "xml": "<activity android:clearTaskOnLaunch=\"true\" android:configChanges=\"orientation|keyboardHidden|screenSize\" android:exported=\"false\" android:name=\"com.google.zxing.client.android.CaptureActivity\" android:theme=\"@android:style/Theme.DeviceDefault.NoActionBar\" android:windowSoftInputMode=\"stateAlwaysHidden\" />",
+              "count": 1
+            },
+            {
+              "xml": "<activity android:label=\"Share\" android:name=\"com.google.zxing.client.android.encode.EncodeActivity\" />",
+              "count": 1
+            }
+          ],
+          "/manifest": [
+            {
+              "xml": "<uses-permission android:name=\"android.permission.CAMERA\" />",
+              "count": 1
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.FLASHLIGHT\" />",
+              "count": 1
+            },
+            {
+              "xml": "<uses-feature android:name=\"android.hardware.camera\" android:required=\"true\" />",
+              "count": 1
+            }
+          ],
+          "/*": [
+            {
+              "xml": "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />",
+              "count": 1
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />",
+              "count": 1
+            },
+            {
+              "xml": "<uses-feature android:name=\"android.hardware.location.gps\" android:required=\"true\" />",
+              "count": 1
+            }
+          ]
+        }
+      }
+    }
+  },
+  "installed_plugins": {
+    "cordova-plugin-qr-barcode-scanner": {
+      "ANDROID_SUPPORT_V4_VERSION": "27.+",
+      "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
+    },
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
+    },
+    "cordova-plugin-geolocation": {
+      "GPS_REQUIRED": "true",
+      "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
+    }
+  },
+  "dependent_plugins": {},
+  "modules": [
+    {
+      "id": "cordova-plugin-qr-barcode-scanner.BarcodeScanner",
+      "file": "plugins/cordova-plugin-qr-barcode-scanner/www/barcodescanner.js",
+      "pluginId": "cordova-plugin-qr-barcode-scanner",
+      "clobbers": [
+        "cordova.plugins.barcodeScanner"
+      ]
+    },
+    {
+      "id": "cordova-plugin-statusbar.statusbar",
+      "file": "plugins/cordova-plugin-statusbar/www/statusbar.js",
+      "pluginId": "cordova-plugin-statusbar",
+      "clobbers": [
+        "window.StatusBar"
+      ]
+    },
+    {
+      "id": "cordova-plugin-geolocation.geolocation",
+      "file": "plugins/cordova-plugin-geolocation/www/android/geolocation.js",
+      "pluginId": "cordova-plugin-geolocation",
+      "clobbers": [
+        "navigator.geolocation"
+      ]
+    },
+    {
+      "id": "cordova-plugin-geolocation.PositionError",
+      "file": "plugins/cordova-plugin-geolocation/www/PositionError.js",
+      "pluginId": "cordova-plugin-geolocation",
+      "runs": true
+    },
+    {
+      "id": "cordova-plugin-dialogs.notification",
+      "file": "plugins/cordova-plugin-dialogs/www/notification.js",
+      "pluginId": "cordova-plugin-dialogs",
+      "merges": [
+        "navigator.notification"
+      ]
+    },
+    {
+      "id": "cordova-plugin-dialogs.notification_android",
+      "file": "plugins/cordova-plugin-dialogs/www/android/notification.js",
+      "pluginId": "cordova-plugin-dialogs",
+      "merges": [
+        "navigator.notification"
+      ]
+    }
+  ],
+  "plugin_metadata": {
+    "cordova-plugin-qr-barcode-scanner": "8.0.3",
+    "cordova-plugin-statusbar": "3.0.0",
+    "cordova-plugin-geolocation": "4.1.0",
+    "cordova-plugin-dialogs": "2.0.2"
+  }
+}

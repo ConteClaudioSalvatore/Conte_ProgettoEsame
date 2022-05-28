@@ -1,0 +1,26 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-qr-barcode-scanner": {
+      "ANDROID_SUPPORT_V4_VERSION": "27.+",
+      "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
+    },
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
+    },
+    "cordova-plugin-geolocation": {
+      "GPS_REQUIRED": "true",
+      "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
+    }
+  },
+  "dependent_plugins": {}
+}
