@@ -137,3 +137,23 @@ button.mapOrientation:active {
 .form-group{
 	margin-top: 10px;
 }
+#suggestions {
+	background-color: #fff;
+	box-shadow: 0 0 3px #000;
+	border-radius: 25px;
+	padding: 0.5rem;
+}
+#suggestions .row {
+	display: block;
+	margin-left: 0;
+	margin-right: 0;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid #444;
+}
+#suggestions .row:first-of-type{
+	margin-top: 50px;
+}
+#suggestions .row:last-of-type {
+	border-bottom: none;
+}

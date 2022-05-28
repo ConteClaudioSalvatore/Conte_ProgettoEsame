@@ -21,7 +21,13 @@ function mostraProdotto(result) {
         data = data.product;
         data = JSON.parse(data);
         data = data[0];
-        if (data.generic_name != undefined) modalTitle.text(data.generic_name);
+        if (data.generic_name != undefined) 
+        { 
+          if(data.generic_name.length > 15)
+            modalTitle.text(data.generic_name.substring(0,25) + "...");
+          else
+            modalTitle.text(data.generic_name);
+        }
         else modalTitle.text("Prodotto");
         data.nutriments = JSON.parse(data.nutriments);
         creaBodyProdotto(modalBody, data);
@@ -326,6 +332,7 @@ function nuovoProdotto(code, buttonIndex) {
                 .attr("id", "txtEnergiaJ")
                 .attr("placeholder", "0")
                 .addClass("form-control")
+                .on("change", toInt)
               )
             )
           )
@@ -343,6 +350,7 @@ function nuovoProdotto(code, buttonIndex) {
                 .attr("id", "txtEnergiaKcal")
                 .attr("placeholder", "0")
                 .addClass("form-control")
+                .on("change", toInt)
               )
             )
           )
@@ -358,8 +366,10 @@ function nuovoProdotto(code, buttonIndex) {
                 $("<input>")
                 .attr("pattern", "^\d*(\.\d{0,2})?$")
                 .attr("id", "txtGrassi")
+                .attr("type", "number")
                 .attr("placeholder", "0.00")
                 .addClass("form-control")
+                .on("change", toFloat)
               )
             )
           )
@@ -375,8 +385,10 @@ function nuovoProdotto(code, buttonIndex) {
                 $("<input>")
                 .attr("pattern", "^\d*(\.\d{0,2})?$")
                 .attr("id", "txtGrassiSaturi")
+                .attr("type", "number")
                 .attr("placeholder", "0.00")
                 .addClass("form-control")
+                .on("change", toFloat)
               )
             )
           )
@@ -393,7 +405,9 @@ function nuovoProdotto(code, buttonIndex) {
                 .attr("pattern", "^\d*(\.\d{0,2})?$")
                 .attr("id", "txtFibre")
                 .attr("placeholder", "0.00")
+                .attr("type", "number")
                 .addClass("form-control")
+                .on("change", toFloat)
               )
             )
           )
@@ -410,7 +424,9 @@ function nuovoProdotto(code, buttonIndex) {
                 .attr("pattern", "^\d*(\.\d{0,2})?$")
                 .attr("id", "txtProteine")
                 .attr("placeholder", "0.00")
+                .attr("type", "number")
                 .addClass("form-control")
+                .on("change", toFloat)
               )
             )
           )
@@ -427,7 +443,9 @@ function nuovoProdotto(code, buttonIndex) {
                 .attr("pattern", "^\d*(\.\d{0,2})?$")
                 .attr("id", "txtSale")
                 .attr("placeholder", "0.00")
+                .attr("type", "number")
                 .addClass("form-control")
+                .on("change", toFloat)
               )
             )
           )
@@ -448,7 +466,9 @@ function nuovoProdotto(code, buttonIndex) {
         .attr("pattern", "^\d*(\.\d{0,2})?$")
         .attr("id", "txtPrezzo")
         .attr("placeholder", "0.00")
+        .attr("type", "number")
         .addClass("form-control")
+        .on("change", toFloat)
       )
     )
     .append(
@@ -545,14 +565,22 @@ function salvaNuovoProdotto(){
   let keywords = $("#txtKeywords").val();
   let ingredients = $("#txtIngredienti").val();
   let prezzo = $("#txtPrezzo").val();
+  //converting nutriments values from string to float
+  let energyKcal = parseFloat($("#txtEnergiaKcal").val());
+  let energyJ = parseFloat($("#txtEnergiaJ").val());
+  let fat = parseFloat($("#txtGrassi").val()); 
+  let proteins = parseFloat($("#txtProteine").val());
+  let saturatedFat = parseFloat($("#txtGrassiSaturi").val());
+  let salt = parseFloat($("#txtSale").val());
+  let fibers = parseFloat($("#txtFibre").val());
   let nutriments = {
-    "energy-kcal": $("#txtEnergiaKcal").val(),
-    "energy": $("#txtEnergiaJ").val(),
-    "fat": $("#txtGrassi").val(),
-    "saturated-fat": $("#txtGrassiSaturi").val(),
-    "fiber": $("#txtFibre").val(),
-    "proteins": $("#txtProteine").val(),
-    "salt": $("#txtSale").val()
+    "energy-kcal": energyKcal,
+    "energy": energyJ,
+    "fat": fat,
+    "saturated-fat": saturatedFat,
+    "fiber": fibers,
+    "proteins": proteins,
+    "salt": salt
   };
   let supermercato = $("#cmbSupermercato").val();
   let image_url = imgPath;
@@ -595,7 +623,27 @@ function checkInput(input){
     input.data.ingredients == "" || 
     input.prezzo == "" || 
     input.supermercato == "" 
+  ){
+    let nutriments = input.data.nutriments
+    if(
+      nutriments["energy-kcal"] == "" || 
+      nutriments["energy"] == "" || 
+      nutriments["fat"] == "" || 
+      nutriments["saturated-fat"] == "" || 
+      nutriments["fiber"] == "" || 
+      nutriments["proteins"] == "" || 
+      nutriments["salt"] == ""
     ){
-    return false;
+      return false;
+    }
   }
+  return true;
+}
+function toFloat(){
+  let input = $(this);
+  input.val(parseFloat(input.val()).toFixed(2));
+}
+function toInt(){
+  let input = $(this);
+  input.val(parseInt(input.val()));
 }

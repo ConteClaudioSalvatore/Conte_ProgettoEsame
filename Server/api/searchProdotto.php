@@ -11,9 +11,11 @@
     $barcode = $_POST['barcode'];
     $sql = "";
     if($nomeProdotto != null)
-        $sql = "select * from prodotti where generic_name like '$nomeProdotto'% limit 25";
-    else
+        $sql = "select * from prodotti where generic_name like '$nomeProdotto%' limit 25";
+    else if($barcode != null)
         $sql = "select * from prodotti where id='$barcode'";
+    else
+        $sql = "select * from prodotti limit 10";
     /*Il metodo query lancia la query sql e restituisce il recordset corrispondente*/
     $rs = $con->query($sql);
     /*Controlla se il recordset esiste o no cioè se ci sono stati degli errori*/
