@@ -7,24 +7,23 @@
     /*Controlla se il codice di errore è diverso da 0*/
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
-	$postdata = file_get_contents("php://input");
-	$param = json_decode($postdata);
-    $barcode = $param->barcode;
-    $supermarket = $param->supermarket;
-    $prezzo = $param->prezzo;
+    
+    
     //cerco se il prodotto è già presente nel supermercato
-    $sql = "select * from prodotti_supermercati where barcode = :barcode and supermarket = :supermarket";
+    $sql = "select * from prodotti_supermercati where codice_a_barre = ? and codice_supermercato = ?";
     $stmt = $con->prepare($sql);
-    $stmt->bind_param(":barcode", $barcode);
-    $stmt->bind_param(":supermarket", $supermarket);
+    $stmt->bind_param("ss", $barcode, $supermarket);
+    $barcode = $_POST["barcode"];
+    $supermarket = $_POST["supermarket"];
     $stmt->execute();
     if($stmt->num_rows()==0){
-        $sql = "insert into prodotti_supermercati(barcode, supermarket, prezzo) ";
-        $sql.="values(:barcode,:supermarket,:prezzo)";
+        $sql = "insert into prodotti_supermercati(codice_a_barre, codice_supermercato, prezzo) ";
+        $sql.="values(?,?,?)";
         $stmt = $con->prepare($sql);
-        $stmt->bind_param(":barcode", $barcode);
-        $stmt->bind_param(":supermarket", $supermarket);
-        $stmt->bind_param(":prezzo", $prezzo);
+        $stmt->bind_param("ssd", $barcode, $supermarket, $prezzo);
+        $barcode = $_POST["barcode"];
+        $supermarket = $_POST["supermarket"];
+        $prezzo = $_POST["prezzo"];
         if($stmt->execute())
             echo "{err:-1,message:'Prodotto inserito correttamente nel supermercato!'}";
         else

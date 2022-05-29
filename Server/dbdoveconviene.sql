@@ -36,7 +36,7 @@ CREATE TABLE if not exists `prodotti` (
   `generic_name` varchar(100) NOT NULL COMMENT 'nome prodotto',
   `image_front_url` varchar(200) NULL COMMENT 'immagine del prodotto',
   `ingredients_text` varchar(500) NOT NULL COMMENT 'ingredienti',
-  `nutriments` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'nutrienti',
+  `nutriments` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'nutrienti',
   `last_editor` varchar(100) DEFAULT NULL COMMENT 'ultimo aoutore modifica',
   `last_edited_t` bigint(20) DEFAULT NULL COMMENT 'data ultima modifica'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

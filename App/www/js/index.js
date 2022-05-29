@@ -6,8 +6,8 @@ let suggestions = $("#suggestions");
 var searchBar = $(".searchBar");
 
 function onDeviceReady() {
-  alert = navigator.notification.alert;
   suggestions.hide();
+  alert = navigator.notification.alert;
   mappa();
   $("#btnBarcode").on("click", barcodeScanner);
   $("#txtSearchBox").on("focus change keydown", suggerimenti);
@@ -66,7 +66,6 @@ function suggerimenti() {
                     $("<span></span>")
                     .text(product.generic_name)
                     .attr("barcode", product.id)
-                    
                   )
                 )
                 .on("click", function (e) {

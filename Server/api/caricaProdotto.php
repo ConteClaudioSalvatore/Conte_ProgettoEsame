@@ -58,7 +58,6 @@
     }
     else
         echo "Errore nell'inserimento del prodotto";
-    //$stmt->error;
     $stmt->close();
     $con->close();
 ?>
