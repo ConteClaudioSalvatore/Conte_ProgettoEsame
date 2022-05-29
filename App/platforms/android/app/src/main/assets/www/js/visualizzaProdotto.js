@@ -1,4 +1,3 @@
-let imgPath = "";
 function mostraProdotto(result) {
 	if (result.cancelled) {
 		return;
@@ -86,30 +85,46 @@ function creaBodyProdotto(modalBody, data) {
 							$("<button></button>")
 								.addClass("btn btn-danger")
 								.attr("data-bs-dismiss", "modal")
-								.text("X")
+								.text("Chiudi")
+						)
+						.append(
+							$("<button></button>")
+								.addClass("btn btn-success")
+								.text("Modifica")
+								.on("click", caricaModificaProdotto.bind(this, data.id))
 						)
 				);
-			modalBody
-				.append(
-					$("<span></span>")
-						.text("Codice: ")
-						.addClass("text-center my-2")
-						.append($("<strong></strong>").text(data.id))
+			modalBody.append(
+				$("<span></span>")
+					.text("Codice: ")
+					.addClass("text-center my-2")
+					.append($("<strong></strong>").text(data.id))
+			);
+			if (
+				data.image_front_url.includes("https://claudioconte.altervista.org/api/getImage.php")
+			) {
+				$.ajax({
+					url: data.image_front_url,
+					method: "get",
+					success: function (imgTrueUrl) {
+						data.image_front_url = imgTrueUrl;
+					},
+				});
+			}
+			modalBody.append(
+				divProdotto.addClass("row").append(
+					$("<div></div>")
+						.addClass("col-md-5")
+						.append(
+							$("<img>")
+								.addClass("img-responsive")
+								.css({
+									width: "100%",
+								})
+								.attr("src", data.image_front_url)
+						)
 				)
-				.append(
-					divProdotto.addClass("row").append(
-						$("<div></div>")
-							.addClass("col-md-5")
-							.append(
-								$("<img>")
-									.addClass("img-responsive")
-									.css({
-										width: "100%",
-									})
-									.attr("src", data.image_front_url)
-							)
-					)
-				);
+			);
 			if (data.ingredients_text != undefined) {
 				divIngredienti.html(data.ingredients_text);
 				divProdotto.append(

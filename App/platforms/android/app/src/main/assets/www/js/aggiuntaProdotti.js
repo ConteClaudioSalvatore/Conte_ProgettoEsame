@@ -264,9 +264,6 @@ function nuovoProdotto(code, buttonIndex) {
 							.attr("type", "file")
 							.attr("accept", "image/*;capture=camera")
 							.addClass("form-control")
-							.on("change", function () {
-								imgPath = $(this).val();
-							})
 					)
 			)
 			.append(
@@ -297,7 +294,7 @@ function nuovoProdotto(code, buttonIndex) {
 						.attr("id", "btnSalva")
 						.addClass("btn btn-success")
 						.text("Salva")
-						.on("click", null)
+						.on("click", salvaProdotto.bind(this, 0))
 				)
 				.append(
 					$("<button></button>")
@@ -329,7 +326,9 @@ function nuovoProdotto(code, buttonIndex) {
 		}
 	}
 }
-function salvaNuovoProdotto() {
+//type == 0 -> aggiungi prodotto
+//type == 1 -> modifica prodotto
+function salvaProdotto(e, type) {
 	let barcode = $("#barcode").text();
 	let generic_name = $("#txtNome").val();
 	let categories = $("#txtCategorie").val();
@@ -359,32 +358,64 @@ function salvaNuovoProdotto() {
 	let data = {
 		barcode: barcode,
 		generic_name: generic_name,
-		creator: creator,
 		categories: categories,
 		keywords: keywords,
 		nutriments: JSON.stringify(nutriments),
 		image_front_url: image_url,
 		ingredients_text: ingredients_text,
 	};
+	if(type == 0)
+		data.creator = creator;
+	else
+		data.last_editor = creator;
 	let input = {
 		supermercato: supermercato,
 		prezzo: prezzo,
 		data: data,
 	};
 	if (checkInput(input)) {
+		let imgData = new FormData();
+		imgData.append("image", $("#img").prop("files")[0]);
 		$.ajax({
-			url: "https://claudioconte.altervista.org/api/caricaProdotto.php",
-			method: "POST",
-			data: data,
-			success: function (data) {
-				$("#modal").modal("hide");
-				console.log(data);
-				alert("Prodotto inserito correttamente!", null, "", "Ok");
-			},
-			error: function (err) {
-				console.log(err);
-			},
-		});
+			url: "http://localhost:8080/api/uploadImage.php",
+			type: "POST",
+			data: imgData,
+			processData: false,
+			contentType: false,
+			success: function (imgInsertedData) {
+				data.image_front_url = imgInsertedData.url;
+				let url = "https://claudioconte.altervista.org/api/caricaProdotto.php";
+				if (type == 1) url = "https://claudioconte.altervista.org/api/modificaProdotto.php";
+				$.ajax({
+					url: url,
+					method: "POST",
+					data: data,
+					success: function (data) {
+						console.log(data);
+						$.ajax({
+							url: "https://claudioconte.altervista.org/api/aggiungiProdottoASupermercato.php",
+							method: "POST",
+							data: {
+								puermarket:input.supermercato,
+								barcode: barcode,
+								prezzo: prezzo,
+							},
+							success: function (data) {
+								console.log(data);
+								if(data.err == -1){
+									$("#modal").modal("hide");
+									alert("Prodotto inserito correttamente!", null, "", "Ok");
+								}
+							}
+						})
+					},
+					error: function (err) {
+						console.log(err);
+					},
+				});
+			}
+		})
+		
 	} else {
 		alert("Alcuni campi non sono stati completati!", null, "", "Ok");
 	}

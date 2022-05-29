@@ -7,33 +7,52 @@
     /*Controlla se il codice di errore è diverso da 0*/
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
-    $nomeProdotto = $_POST['nomeProdotto'];
-    $barcode = $_POST['barcode'];
-    $sql = "";
-    if($nomeProdotto != null)
-        $sql = "select * from prodotti where generic_name like '$nomeProdotto%' limit 25";
-    else if($barcode != null)
-        $sql = "select * from prodotti where id='$barcode'";
+	$postdata = file_get_contents("php://input");
+
+    $sql = "update prodotti set ";
+    if($_POST['keywords'] != null)
+        $sql .= "keywords = ?, ";
+    if($_POST['categories'] != null)
+        $sql .= "categories = ?, ";
+    $sql.="last_editor = ?, last_edited_t = ?, generic_name = ?, ";
+    if($_POST['image_front_url'] != null)
+        $sql .= "image_front_url = ?, ";
+    $sql = "ingredients_text = ?, nutriments = ? 
+            where id = ?";
+    $stmt = $con->prepare($sql);
+    if($_POST['keywords'] != null){
+        if($_POST['categories'] != null)
+            $stmt->bind_param("sssissss", $categories, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments, $barcode);
+        else
+            $stmt->bind_param("ssssissss", $keywords, $categories, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments, $barcode);
+        }
+        
+    else if($_POST['categories'] != null)
+        $stmt->bind_param("sssissss", $categories, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments,$barcode);
     else
-        $sql = "select * from prodotti limit 10";
-    /*Il metodo query lancia la query sql e restituisce il recordset corrispondente*/
-    $rs = $con->query($sql);
-    /*Controlla se il recordset esiste o no cioè se ci sono stati degli errori*/
-    if (!$rs)
-        die("Errore nella query " . $con->errno . " " . $con->error);
-    /*Ciclo di scansione del recordset*/
-    if ($rs->num_rows == 0){
-        $err->code = 1;
-        $err->message = "Nessun prodotto trovato";
-        die(json_encode($err));
-    }
-    else {
-        $vect = [];
-        $json->code = 200;
-        while ($record = $rs->fetch_assoc())
-            array_push($vect, $record);
-        $json->product = json_encode($vect);
+        $stmt->bind_param("ssisss", $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments, $barcode);
+    $barcode = $_POST['barcode'];
+    if($_POST['keywords'] != "")
+        $keywords = $_POST['keywords'];
+    else
+        $keywords = null;
+    if($_POST['categories'] != "")
+        $categories = $_POST['categories'];
+    else
+        $categories = null;
+    $creator = $_POST['last_editor'];
+    $created_t = floor(microtime(true) * 1000);
+    $generic_name = $_POST['generic_name'];
+    $image_front_url = $_POST['image_front_url'];
+    $ingredients_text = $_POST['ingredients_text'];
+    $nutriments = $_POST['nutriments'];
+    if($stmt->execute())
+    {
+        $json->message = "Prodotto modificato correttamente";
         echo json_encode($json);
     }
+    else
+        echo "Errore nell'inserimento del prodotto";
+    $stmt->close();
     $con->close();
 ?>

@@ -7,9 +7,7 @@
     /*Controlla se il codice di errore è diverso da 0*/
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
-	$postdata = file_get_contents("php://input");
-    $params = json_decode($postdata);
-	$barcode = $params->barcode;
+	$barcode = $_POST['barcode'];
     $keywords = $params->keywords;
     $categories = $params->categories;
     $generic_name = $params->generic_name;
