@@ -47,7 +47,7 @@ function nuovoProdotto(code, buttonIndex) {
 					.append(
 						$("<label></label>")
 							.attr("for", "txtNomeProdotto")
-							.text("Nome Prodotto")
+							.text("Nome Prodotto:")
 							.addClass("form-label")
 					)
 					.append(
@@ -64,7 +64,7 @@ function nuovoProdotto(code, buttonIndex) {
 					.append(
 						$("<label></label>")
 							.attr("for", "txtCategorie")
-							.text("Categoria")
+							.text("Categoria:")
 							.addClass("form-label")
 					)
 					.append(
@@ -81,7 +81,7 @@ function nuovoProdotto(code, buttonIndex) {
 					.append(
 						$("<label></label>")
 							.attr("for", "txtKeywords")
-							.text("Chiavi di Ricerca")
+							.text("Chiavi di Ricerca:")
 							.addClass("form-label")
 					)
 					.append(
@@ -221,7 +221,7 @@ function nuovoProdotto(code, buttonIndex) {
 					.append(
 						$("<label></label>")
 							.attr("for", "txtPrezzo")
-							.text("Prezzo(€)")
+							.text("Prezzo(€):")
 							.addClass("form-label")
 					)
 					.append(
@@ -328,7 +328,7 @@ function nuovoProdotto(code, buttonIndex) {
 }
 //type == 0 -> aggiungi prodotto
 //type == 1 -> modifica prodotto
-function salvaProdotto(e, type) {
+function salvaProdotto(type) {
 	let barcode = $("#barcode").text();
 	let generic_name = $("#txtNome").val();
 	let categories = $("#txtCategorie").val();
@@ -377,7 +377,7 @@ function salvaProdotto(e, type) {
 		let imgData = new FormData();
 		imgData.append("image", $("#img").prop("files")[0]);
 		$.ajax({
-			url: "http://localhost:8080/api/uploadImage.php",
+			url: "http://claudioconte.altervista.org/api/uploadImage.php",
 			type: "POST",
 			data: imgData,
 			processData: false,
@@ -396,7 +396,7 @@ function salvaProdotto(e, type) {
 							url: "https://claudioconte.altervista.org/api/aggiungiProdottoASupermercato.php",
 							method: "POST",
 							data: {
-								puermarket:input.supermercato,
+								supermarket:input.supermercato,
 								barcode: barcode,
 								prezzo: prezzo,
 							},

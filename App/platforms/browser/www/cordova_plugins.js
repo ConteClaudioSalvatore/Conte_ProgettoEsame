@@ -43,6 +43,20 @@ module.exports = [
         "merges": [
             "navigator.notification"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-splashscreen/src/browser/SplashScreenProxy.js",
+        "id": "cordova-plugin-splashscreen.SplashScreenProxy",
+        "pluginId": "cordova-plugin-splashscreen",
+        "runs": true
+    },
+    {
+        "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
+        "id": "cordova-plugin-splashscreen.SplashScreen",
+        "pluginId": "cordova-plugin-splashscreen",
+        "clobbers": [
+            "navigator.splashscreen"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -51,7 +65,8 @@ module.exports.metadata =
     "cordova-plugin-qr-barcode-scanner": "8.0.3",
     "cordova-plugin-statusbar": "3.0.0",
     "cordova-plugin-geolocation": "4.1.0",
-    "cordova-plugin-dialogs": "2.0.2"
+    "cordova-plugin-dialogs": "2.0.2",
+    "cordova-plugin-splashscreen": "6.0.1"
 }
 // BOTTOM OF METADATA
 });

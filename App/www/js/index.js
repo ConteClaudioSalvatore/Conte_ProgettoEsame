@@ -6,6 +6,7 @@ let suggestions = $("#suggestions");
 var searchBar = $(".searchBar");
 
 function onDeviceReady() {
+  navigator.splashscreen.show();
   suggestions.hide();
   alert = navigator.notification.alert;
   mappa();
@@ -18,6 +19,7 @@ function onDeviceReady() {
   StatusBar.show();
   StatusBar.overlaysWebView(true);
   StatusBar.styleDefault();
+  navigator.splashscreen.hide();
 }
 
 function barcodeScanner() {

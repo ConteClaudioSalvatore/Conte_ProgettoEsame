@@ -19,6 +19,9 @@
     },
     "cordova-plugin-dialogs": {
       "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
     }
   },
   "dependent_plugins": {}

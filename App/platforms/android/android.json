@@ -27,6 +27,10 @@
             {
               "xml": "<feature name=\"Notification\"><param name=\"android-package\" value=\"org.apache.cordova.dialogs.Notification\" /></feature>",
               "count": 1
+            },
+            {
+              "xml": "<feature name=\"SplashScreen\"><param name=\"android-package\" value=\"org.apache.cordova.splashscreen.SplashScreen\" /><param name=\"onload\" value=\"true\" /></feature>",
+              "count": 1
             }
           ]
         }
@@ -89,6 +93,9 @@
     },
     "cordova-plugin-dialogs": {
       "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
     }
   },
   "dependent_plugins": {},
@@ -138,12 +145,21 @@
       "merges": [
         "navigator.notification"
       ]
+    },
+    {
+      "id": "cordova-plugin-splashscreen.SplashScreen",
+      "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
+      "pluginId": "cordova-plugin-splashscreen",
+      "clobbers": [
+        "navigator.splashscreen"
+      ]
     }
   ],
   "plugin_metadata": {
     "cordova-plugin-qr-barcode-scanner": "8.0.3",
     "cordova-plugin-statusbar": "3.0.0",
     "cordova-plugin-geolocation": "4.1.0",
-    "cordova-plugin-dialogs": "2.0.2"
+    "cordova-plugin-dialogs": "2.0.2",
+    "cordova-plugin-splashscreen": "6.0.1"
   }
 }

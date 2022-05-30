@@ -4,6 +4,7 @@ let map;
 let layerUserMarker;
 let positionTracking;
 let supermarketInfo;
+let superMarketsFullNames =[] ;
 let marker;
 function mappa() {
   $(".mapOrientation").hide();
@@ -143,6 +144,7 @@ function addSupermarketMarkers(){
         var vectorSource = new ol.source.Vector({
           features: []
         });
+        superMarketsFullNames = [];
         sm.forEach(supermarket => {
           var markerStyle = new ol.style.Icon(({
             src: 'img/shop.png',
@@ -154,6 +156,7 @@ function addSupermarketMarkers(){
             image: markerStyle,
           }));
           marker.name = supermarket.display_name;
+          superMarketsFullNames.push(supermarket.display_name);
           vectorSource.addFeature(marker);
         }) 
         var markerLayer = new ol.layer.Vector({

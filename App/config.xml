@@ -11,4 +11,7 @@
     <platform name="android">
         <icon src="./www/img/logo.png"></icon>
     </platform>
+    <splash src="www/img/splash.png" />
+    <preference name="FadeSplashScreen" value="false"/>
+    <preference name="FadeSplashScreenDuration" value="100"/>
 </widget>

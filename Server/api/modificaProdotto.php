@@ -7,44 +7,63 @@
     /*Controlla se il codice di errore è diverso da 0*/
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
-	$barcode = $_POST['barcode'];
-    $keywords = $params->keywords;
-    $categories = $params->categories;
-    $generic_name = $params->generic_name;
-    $image_front_url = $params->image_front_url;
-    $ingredients_text = $params->ingredients_text;
-    $nutriments = $params->nutriments;
-    $lastEditor = $params->lastEditor;
-    $lastEditedT = floor(microtime(true) * 1000);
     $sql = "update prodotti set ";
-    if($keywords != null)
-        $sql .= "keywords = :keywords, ";
-    if($categories != null)
-        $sql .= "categories = :categories, ";
-    $sql.="generic_name = :generic_name,";
-    if($image_front_url != null)
-        $sql .= "image_front_url = :image_front_url, ";
-    $sql .= "
-        ingredients_text = :ingredients_text,
-        nutriments = :nutriments,
-        lastEditor = :lastEditor,
-        lastEditedT = :lastEditedT
-        where id = :barcode";
+    if($_POST['keywords'] != null)
+        $sql .= "keywords = ?, ";
+    if($_POST['categories'] != null)
+        $sql .= "categories = ?, ";
+    $sql.="last_editor = ?, last_edited_t = ?, generic_name = ?, ";
+    if($_POST['image_front_url'] != null)
+        $sql .= "image_front_url = ?, ";
+    $sql = "ingredients_text = ?, nutriments = ? 
+            where id = ?";
     $stmt = $con->prepare($sql);
-    $stmt->bind_param(":barcode", $barcode);
-    if($keywords != null)
-        $stmt->bind_param(":keywords", $keywords);
-    if($categories != null)
-        $stmt->bind_param(":categories", $categories);
-    $stmt->bind_param(":generic_name", $generic_name);
-    if($image_front_url != null)
-        $stmt->bind_param(":image_front_url", $image_front_url);
-    $stmt->bind_param(":ingredients_text", $ingredients_text);
-    $stmt->bind_param(":nutriments", $nutriments);
-    $stmt->bind_param(":lastEditor", $lastEditor);
-    $stmt->bind_param(":lastEditedT", $lastEditedT);
-    if($stmt->execute())
-        echo "Prodotto modificato correttamente";
+    if($_POST['keywords'] != null){
+        if($_POST['categories'] != null)
+            $stmt->bind_param("sssissss", $categories, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments, $barcode);
+        else
+            $stmt->bind_param("ssssissss", $keywords, $categories, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments, $barcode);
+        }
+        
+    else if($_POST['categories'] != null)
+        $stmt->bind_param("sssissss", $categories, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments,$barcode);
     else
-        echo "Errore nella modifica del prodotto";
+        $stmt->bind_param("ssisss", $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments, $barcode);
+    $barcode = $_POST['barcode'];
+    if($_POST['keywords'] != "")
+        $keywords = $_POST['keywords'];
+    else
+        $keywords = null;
+    if($_POST['categories'] != "")
+        $categories = $_POST['categories'];
+    else
+        $categories = null;
+    $creator = $_POST['last_editor'];
+    $created_t = floor(microtime(true) * 1000);
+    $generic_name = $_POST['generic_name'];
+    $image_front_url = $_POST['image_front_url'];
+    $ingredients_text = $_POST['ingredients_text'];
+    $nutriments = $_POST['nutriments'];
+    if($stmt->execute())
+    {
+        $sql = "select * from prodotti_supermercati where codice_a_barre = '$barcode' and codice_supermercato = '$creator'";
+        $rs = $con->query($sql);
+        if($rs->num_rows == 0){
+            $prezzo = $_POST["prezzo"];
+            $supermercato = $_POST["supermarket"];
+            $sql = "insert into prodotti_supermercati (codice_a_barre, codice_supermercato, prezzo)
+                    values ('$barcode', '$supermercato', '$prezzo')";
+        }
+        else{
+            $sql = "update prodotti_supermercati set prezzo = $prezzo
+                    where codice_a_barre = '$barcode' and codice_supermercato = '$creator'";
+        }
+        $con->query($sql);
+        $json->message = "Prodotto modificato correttamente";
+        echo json_encode($json);
+    }
+    else
+        echo "Errore nell'inserimento del prodotto";
+    $stmt->close();
+    $con->close();
 ?>

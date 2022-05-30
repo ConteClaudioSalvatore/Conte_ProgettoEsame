@@ -1,13 +1,20 @@
-function caricaModificaProdotto(e, barcode) {
+function caricaModificaProdotto(barcode) {
+    let modal = $("#modal");
+    let modalBody = $("#modalBody");
+    let modalTitle = $("#modalTitle");
+    modalBody.empty();
+    modalTitle.text("Modifica Prodotto");
 	$.ajax({
-		url: "https://claudioconte.altervista.org/api/searchProduct.php",
+		url: "https://claudioconte.altervista.org/api/searchProdotto.php",
 		method: "post",
-		dataType: "json",
+        dataType: "json",
 		data: { barcode: barcode },
 		success: function (data) {
-			data = data.product;
+			data = JSON.parse(data.product);
+            data = data[0];
+            console.log(data)
             data.nutriments = JSON.parse(data.nutriments);
-			modalBody.html("");
+			modalBody.empty();
 			$.ajax({
 				url: "https://claudioconte.altervista.org/api/prodottiSupermercato.php",
 				method: "post",
@@ -20,30 +27,25 @@ function caricaModificaProdotto(e, barcode) {
 							$("<div></div>")
 								.addClass("btn-group")
 								.attr("id", "btn")
-								.append(
-									$("<button></button>")
-										.addClass("btn btn-danger")
-										.attr("data-bs-dismiss", "modal")
-										.text("Annulla")
-								)
                                 .append(
                                     $("<button></button>")
                                         .addClass("btn btn-success")
                                         .text("Modifica")
                                         .on("click", salvaProdotto.bind(this, 1))
                                 )
+								.append(
+									$("<button></button>")
+										.addClass("btn btn-danger")
+										.attr("data-bs-dismiss", "modal")
+										.text("Annulla")
+								)
 						);
-                        let modal = $("#modal");
-                        let modalBody = $("#modalBody");
-                        let modalTitle = $("#modalTitle");
-                        modalBody.empty();
-                        modalTitle.text("Nuovo Prodotto");
                         modalBody
                             .append(
                                 $("<span></span>")
                                     .addClass("text-center")
                                     .text("Codice: ")
-                                    .append($("<strong></strong>").text(code).attr("id", "barcode"))
+                                    .append($("<strong></strong>").text(data.id).attr("id", "barcode"))
                             )
                             .append(
                                 $("<div></div>")
@@ -51,7 +53,7 @@ function caricaModificaProdotto(e, barcode) {
                                     .append(
                                         $("<label></label>")
                                             .attr("for", "txtNomeProdotto")
-                                            .text("Nome Prodotto")
+                                            .text("Nome Prodotto:")
                                             .addClass("form-label")
                                     )
                                     .append(
@@ -69,7 +71,7 @@ function caricaModificaProdotto(e, barcode) {
                                     .append(
                                         $("<label></label>")
                                             .attr("for", "txtCategorie")
-                                            .text("Categoria")
+                                            .text("Categorie:")
                                             .addClass("form-label")
                                     )
                                     .append(
@@ -87,7 +89,7 @@ function caricaModificaProdotto(e, barcode) {
                                     .append(
                                         $("<label></label>")
                                             .attr("for", "txtKeywords")
-                                            .text("Chiavi di Ricerca")
+                                            .text("Chiavi di Ricerca:")
                                             .addClass("form-label")
                                     )
                                     .append(
@@ -235,7 +237,7 @@ function caricaModificaProdotto(e, barcode) {
                                     .append(
                                         $("<label></label>")
                                             .attr("for", "txtPrezzo")
-                                            .text("Prezzo(€)")
+                                            .text("Prezzo(€):")
                                             .addClass("form-label")
                                             
                                     )
@@ -298,7 +300,42 @@ function caricaModificaProdotto(e, barcode) {
                                             .addClass("form-control")
                                             .attr("placeholder", "Nome Cognome")
                                     )
+                            )
+                            .append(
+                                $("<div></div>")
+                                    .addClass("text-center")
+                                    .append(
+                                        $("<span></span>")
+                                            .attr("id", "ultimaModifica")
+                                            .text("Ultima modifica: ")
+                                    )
                             );
+                        
+                        if(data.last_editor!=undefined && data.last_editor!=null){
+                            $("#ultimaModifica")
+                                .append(
+                                    $("<strong></strong>")
+                                        .text(millisecondsToDateTimeString(data.last_edited_t))
+                                )
+                                .append(" da ")
+                                .append(
+                                    $("<strong></strong>")
+                                        .text(data.last_editor)
+                                );
+                        }
+                        else{
+                            $("#ultimaModifica")
+                                .append(
+                                    $("<strong></strong>")
+                                        .text(millisecondsToDateTimeString(data.created_t))
+                                )
+                                .append(" da ")
+                                .append(
+                                    $("<strong></strong>")
+                                        .text(data.creator)
+                                );
+                        }
+
                         modal.modal("show");
                 
                         let select = $("#cmbSupermercato");
@@ -322,6 +359,9 @@ function caricaModificaProdotto(e, barcode) {
                         else
                             select.val(0);
 				},
+                error: function(error) {
+                    console.log(error);
+                }
 			});
 		},
 	});

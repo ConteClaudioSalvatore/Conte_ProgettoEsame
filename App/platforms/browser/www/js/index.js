@@ -2,15 +2,16 @@
 document.addEventListener("deviceready", onDeviceReady, false);
 
 let btnGps;
-let suggestions = $("#seggestions");
+let suggestions = $("#suggestions");
 var searchBar = $(".searchBar");
 
 function onDeviceReady() {
-  alert = navigator.notification.alert;
   suggestions.hide();
+  alert = navigator.notification.alert;
   mappa();
   $("#btnBarcode").on("click", barcodeScanner);
-  $("#txtSearchBox").on("focus", suggerimenti);
+  $("#txtSearchBox").on("focus change keydown", suggerimenti);
+  $("#txtSearchBox").on("focusout", ()=>{setTimeout(()=>{suggestions.empty().hide();}, 100)});
   btnGps = $("#btnCenterMapOnUser");
   btnGps.on("click", onGpsButtonClick);
   btnGps.hide();
@@ -41,34 +42,48 @@ function barcodeScanner() {
   );
 }
 function suggerimenti() {
-  $.ajax({
-    url: "https://claudioconte.altervista.org/api/searchProdotto.php",
-    method: "POST",
-    data: {
-      nomeProdotto: searchBar.val()
-    },
-    success: function (data) {
-      if(data.product.length > 0){
-        data.product.forEach(product=>{
-          suggestions.append(
-            $("<div></div>").addClass("row").append(
-              $("<div></div>").addClass("col-12").append(
-                $("<span></span>")
-                .text(product.generic_name)
+  setTimeout(()=>{
+    suggestions.empty().hide();
+    $.ajax({
+      url: "https://claudioconte.altervista.org/api/searchProdotto.php",
+      method: "POST",
+      data: {
+        nomeProdotto: $("#txtSearchBox").eq(0).val()
+      },
+      success: function (data) {
+        if(
+          data.product != undefined
+        ){
+          data.product = JSON.parse(data.product);
+          if(data.product.length > 0){
+            suggestions.empty();
+            data.product.forEach(product=>{
+              suggestions.append(
+                $("<div></div>")
+                .addClass("row")
+                .append(
+                  $("<div></div>").addClass("col-12").append(
+                    $("<span></span>")
+                    .text(product.generic_name)
+                    .attr("barcode", product.id)
+                  )
+                )
                 .on("click", function (e) {
-                  var nomeProdotto = e.target.innerText;
-                  alert(nomeProdotto);
-                  suggestions.hide();
-                  mostraProdotto(nomeProdotto);
+                  var barcode = $(e.target).attr("barcode");
+                  mostraProdotto({text:barcode});
+                  suggestions.empty().hide();
                 })
               )
-            )
-          )
-        })
-        suggestions.show();
-      }else{
-        suggestions.hide();
+            })
+          }
+          suggestions.show();
+        }else{
+          suggestions.empty().hide();
+        }
+      },
+      error: function (error) {
+        console.log(error);
       }
-    }
-  })
+    })
+  }, 100);
 }

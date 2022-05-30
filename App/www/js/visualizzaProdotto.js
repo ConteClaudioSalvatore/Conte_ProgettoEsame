@@ -38,7 +38,7 @@ function mostraProdotto(result) {
 						if (data.status != 0) {
 							data = data.product;
 							if (data.generic_name != undefined)
-								modalTitle.text(data.generic_name);
+								modalTitle.text(data.generic_name.substring(0, 25) + "...");
 							else modalTitle.text("Prodotto");
 							inserisciProdottoSuDB(data);
 							creaBodyProdotto(modalBody, data);
@@ -83,15 +83,15 @@ function creaBodyProdotto(modalBody, data) {
 						.attr("id", "btn")
 						.append(
 							$("<button></button>")
-								.addClass("btn btn-danger")
-								.attr("data-bs-dismiss", "modal")
-								.text("Chiudi")
-						)
-						.append(
-							$("<button></button>")
 								.addClass("btn btn-success")
 								.text("Modifica")
 								.on("click", caricaModificaProdotto.bind(this, data.id))
+						)
+						.append(
+							$("<button></button>")
+								.addClass("btn btn-danger")
+								.attr("data-bs-dismiss", "modal")
+								.text("Chiudi")
 						)
 				);
 			modalBody.append(
@@ -106,8 +106,10 @@ function creaBodyProdotto(modalBody, data) {
 				$.ajax({
 					url: data.image_front_url,
 					method: "get",
+					dataType: "json",
+					async: false,
 					success: function (imgTrueUrl) {
-						data.image_front_url = imgTrueUrl;
+						data.image_front_url = imgTrueUrl.image;
 					},
 				});
 			}
@@ -211,6 +213,41 @@ function creaBodyProdotto(modalBody, data) {
 							)
 					);
 			}
+			modalBody
+				.append(
+					$("<div></div>")
+						.addClass("text-center")
+						.append(
+							$("<span></span>")
+								.attr("id", "ultimaModifica")
+								.text("Ultima modifica: ")
+						)
+				);
+			
+			if(data.last_editor!=undefined && data.last_editor!=null){
+				$("#ultimaModifica")
+					.append(
+						$("<strong></strong>")
+							.text(millisecondsToDateTimeString(data.last_edited_t))
+					)
+					.append(" da ")
+					.append(
+						$("<strong></strong>")
+							.text(data.last_editor)
+					);
+			}
+			else{
+				$("#ultimaModifica")
+					.append(
+						$("<strong></strong>")
+							.text(millisecondsToDateTimeString(data.created_t))
+					)
+					.append(" da ")
+					.append(
+						$("<strong></strong>")
+							.text(data.creator)
+					);
+			}
 		},
 	});
 }
@@ -233,4 +270,8 @@ function italiano(val) {
 		default:
 			return val;
 	}
+}
+function millisecondsToDateTimeString(milliseconds){
+	var date = new Date(parseInt(milliseconds));
+	return date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 }

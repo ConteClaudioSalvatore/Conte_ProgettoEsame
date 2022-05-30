@@ -45,12 +45,21 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "merges": [
         "navigator.notification"
       ]
+    },
+    {
+      "id": "cordova-plugin-splashscreen.SplashScreen",
+      "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
+      "pluginId": "cordova-plugin-splashscreen",
+      "clobbers": [
+        "navigator.splashscreen"
+      ]
     }
   ];
   module.exports.metadata = {
     "cordova-plugin-qr-barcode-scanner": "8.0.3",
     "cordova-plugin-statusbar": "3.0.0",
     "cordova-plugin-geolocation": "4.1.0",
-    "cordova-plugin-dialogs": "2.0.2"
+    "cordova-plugin-dialogs": "2.0.2",
+    "cordova-plugin-splashscreen": "6.0.1"
   };
 });
