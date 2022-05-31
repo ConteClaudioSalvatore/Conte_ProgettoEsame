@@ -15,7 +15,6 @@ function mostraProdotto(result) {
 		method: "post",
 		data: postParams,
 		success: function (data) {
-			console.log("datadb", data);
 			if (data.product != undefined) {
 				data = data.product;
 				data = JSON.parse(data);
@@ -34,7 +33,6 @@ function mostraProdotto(result) {
 					dataType: "json",
 					method: "get",
 					success: function (data) {
-						console.log("data api", data);
 						if (data.status != 0) {
 							data = data.product;
 							if (data.generic_name != undefined)
@@ -221,7 +219,7 @@ function creaBodyProdotto(modalBody, data) {
 											smProd.data.forEach(element=>{
 												let i = superMarketsFullNames.indexOf(element.codice_supermercato);
 												if(i != -1){
-													cmbSupermercati.children().eq(i+1).attr("disabled", true);
+													$("#cmbSupermercato").children().eq(i+1).attr("disabled", true);
 												}
 											})
 										}
@@ -244,7 +242,7 @@ function creaBodyProdotto(modalBody, data) {
 						$("<tr></tr>")
 						.append(
 							$("<td></td>")
-								.attr("col-span", "2")
+								.attr("colspan", "2")
 								.append(btnAddPrezzo)
 						)
 						.appendTo(tBodyPrezzi)

@@ -105,6 +105,10 @@ function dialogAggiuntaPrezzo(barcode, modalBody, data) {
 		.append(
 			$("<div></div>")
 				.addClass("modal-dialog")
+				.css({
+					top: "50%",
+					"transform": "translateY(-50%)"
+				})
 				.append(
 					$("<div></div>")
 						.addClass("modal-content")
@@ -123,7 +127,8 @@ function dialogAggiuntaPrezzo(barcode, modalBody, data) {
 										.attr("data-dismiss", "modal")
 										.attr("aria-label", "Close")
 										.on("click", function (e) {
-											$("#dialogAggiuntaPrezzo").modal("dispose");
+											$("#dialogAggiuntaPrezzo").modal("hide");
+											$("#dialogAggiuntaPrezzo").remove();
 										})
 								)
 						)
@@ -201,7 +206,7 @@ function dialogAggiuntaPrezzo(barcode, modalBody, data) {
 												.text("Chiudi")
 												.on("click", function () {
 													$("#dialogAggiuntaPrezzo").modal("hide");
-													$("#dialogAggiuntaPrezzo").modal("dispose");
+													$("#dialogAggiuntaPrezzo").remove();
 												})
 										)
 								)
