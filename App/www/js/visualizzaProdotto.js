@@ -42,6 +42,27 @@ function mostraProdotto(result) {
 							else modalTitle.text("Prodotto");
 							inserisciProdottoSuDB(data);
 							creaBodyProdotto(modalBody, data);
+							$("#dialogs").append(dialogAggiuntaPrezzo);
+							let select = $("#cmbSupermercato");
+							select.empty();
+							select.append(
+								$("<option></option>")
+									.attr("value", "")
+									.text("Seleziona un supermercato")
+							);
+							for (let i = 0; i < superMarketsFullNames.length; i++) {
+								let smInfo = superMarketsFullNames[i].split(",");
+								let textValue = smInfo[0];
+								if (Number.isInteger(parseInt(smInfo[1]))) {
+									textValue += ", " + smInfo[2] + " " + smInfo[1];
+								} else {
+									textValue += ", " + smInfo[1];
+								}
+								select.append(
+									$("<option></option>").attr("value", i).text(textValue)
+								);
+							}
+							dialogAggiuntaPrezzo.children("select").append()
 							modal.modal("show");
 						} else {
 							navigator.notification.confirm(
@@ -101,7 +122,9 @@ function creaBodyProdotto(modalBody, data) {
 					.append($("<strong></strong>").text(data.id))
 			);
 			if (
-				data.image_front_url.includes("https://claudioconte.altervista.org/api/getImage.php")
+				data.image_front_url.includes(
+					"https://claudioconte.altervista.org/api/getImage.php"
+				)
 			) {
 				$.ajax({
 					url: data.image_front_url,
@@ -213,40 +236,34 @@ function creaBodyProdotto(modalBody, data) {
 							)
 					);
 			}
-			modalBody
-				.append(
-					$("<div></div>")
-						.addClass("text-center")
-						.append(
-							$("<span></span>")
-								.attr("id", "ultimaModifica")
-								.text("Ultima modifica: ")
+			modalBody.append(
+				$("<div></div>")
+					.addClass("text-center")
+					.append(
+						$("<span></span>")
+							.attr("id", "ultimaModifica")
+							.text("Ultima modifica: ")
+					)
+			);
+
+			if (data.last_editor != undefined && data.last_editor != null) {
+				$("#ultimaModifica")
+					.append(
+						$("<strong></strong>").text(
+							millisecondsToDateTimeString(data.last_edited_t)
 						)
-				);
-			
-			if(data.last_editor!=undefined && data.last_editor!=null){
-				$("#ultimaModifica")
-					.append(
-						$("<strong></strong>")
-							.text(millisecondsToDateTimeString(data.last_edited_t))
 					)
 					.append(" da ")
-					.append(
-						$("<strong></strong>")
-							.text(data.last_editor)
-					);
-			}
-			else{
+					.append($("<strong></strong>").text(data.last_editor));
+			} else {
 				$("#ultimaModifica")
 					.append(
-						$("<strong></strong>")
-							.text(millisecondsToDateTimeString(data.created_t))
+						$("<strong></strong>").text(
+							millisecondsToDateTimeString(data.created_t)
+						)
 					)
 					.append(" da ")
-					.append(
-						$("<strong></strong>")
-							.text(data.creator)
-					);
+					.append($("<strong></strong>").text(data.creator));
 			}
 		},
 	});
@@ -271,7 +288,19 @@ function italiano(val) {
 			return val;
 	}
 }
-function millisecondsToDateTimeString(milliseconds){
+function millisecondsToDateTimeString(milliseconds) {
 	var date = new Date(parseInt(milliseconds));
-	return date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+	return (
+		date.getDate() +
+		"/" +
+		(date.getMonth() + 1) +
+		"/" +
+		date.getFullYear() +
+		" " +
+		date.getHours() +
+		":" +
+		date.getMinutes() +
+		":" +
+		date.getSeconds()
+	);
 }
