@@ -15,7 +15,6 @@ function mostraProdotto(result) {
 		method: "post",
 		data: postParams,
 		success: function (data) {
-			console.log("datadb", data);
 			if (data.product != undefined) {
 				data = data.product;
 				data = JSON.parse(data);
@@ -34,7 +33,6 @@ function mostraProdotto(result) {
 					dataType: "json",
 					method: "get",
 					success: function (data) {
-						console.log("data api", data);
 						if (data.status != 0) {
 							data = data.product;
 							if (data.generic_name != undefined)

@@ -77,54 +77,62 @@ function mappa() {
                 url: "https://claudioconte.altervista.org/api/getProdottiSupermercato.php",
                 type: "POST",
                 data: {
-                  nome: feature.name
+                  supermarket: feature.name
                 },
                 dataType: "json",
                 timeout: 2000,
                 success: function (data) {
-                  if(data.product != undefined && data.product.length>0){
+                  if(data.product != undefined){
+                    data.product = JSON.parse(data.product);
                     $("#modalBody").empty();
-                    data.product.forEach(prodotto => {
-                      $.ajax({
-                        url: "https://claudioconte.altervista.com/api/searchProdotto.php",
-                        data: { barcode : prodotto.codice_a_barre },
-                        type: "POST",
-                        dataType: "json",
-                        timeout: 2000,
-                        success: function (datiProdotto) {
-                          if(datiProdotto.product.length>0){
-                            let prodInfo = datiProdotto.product[0];
-                            if(prodInfo.generic_name == "")
-                              prodInfo.generic_name = "* senza nome *";
-                            modal
-                            .find("#modalBody")
-                            .append(
-                              $("<div></div>")
-                              .addClass("row py-3")
+                    if(data.product.length > 0){
+                      data.product.forEach(prodotto => {
+                        $.ajax({
+                          url: "https://claudioconte.altervista.org/api/searchProdotto.php",
+                          data: { barcode : prodotto.codice_a_barre },
+                          type: "POST",
+                          dataType: "json",
+                          timeout: 2000,
+                          success: function (datiProdotto) {
+                            datiProdotto.product = JSON.parse(datiProdotto.product);
+                            if(datiProdotto.product.length>0){
+                              let prodInfo = datiProdotto.product[0];
+                              if(prodInfo.generic_name == "")
+                                prodInfo.generic_name = "* senza nome *";
+                              modal
+                              .find("#modalBody")
                               .append(
                                 $("<div></div>")
-                                .addClass("col-md-10")
+                                .addClass("row py-3")
+                                .attr("id", prodInfo.id)
                                 .append(
-                                  $("<span></span>")
-                                    .addClass("text-center")
-                                    .text(prodInfo.generic_name)
+                                  $("<div></div>")
+                                  .addClass("col-9 text-center")
+                                  .append(
+                                    $("<span></span>")
+                                      .text(prodInfo.generic_name)
+                                  )
                                 )
-                              )
-                              .append(
-                                $("<div></div>")
-                                .addClass("col-md-2")
                                 .append(
-                                  $("<span></span>")
-                                    .addClass("text-center font-weight-bold")
-                                    .text(prodotto.prezzo + " €")
+                                  $("<div></div>")
+                                  .addClass("col-3 text-center")
+                                  .append(
+                                    $("<span></span>")
+                                      .append("<strong>"+prodotto.prezzo+"</strong> €")
+                                  )
                                 )
-                              )
-                            );
+                                .on("click", function(e){
+                                  let barcode = $(this).attr("id");
+                                  $("#modal").modal("hide");
+                                  mostraProdotto(barcode);
+                                })
+                              );
+                            }
                           }
-                        }
-                      })
-                    });
-                    modal.modal("show");
+                        })
+                      });
+                      modal.modal("show");
+                    }
                   }
                   else{
                     modal
@@ -138,6 +146,9 @@ function mappa() {
                     );
                     modal.modal("show");
                   }
+                },
+                error: function (err) {
+                  console.log(err)
                 }
               })
             }

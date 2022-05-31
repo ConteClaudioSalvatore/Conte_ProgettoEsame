@@ -7,9 +7,8 @@
     /*Controlla se il codice di errore è diverso da 0*/
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
-    $supermercato = $_POST["supermarket"];
-    $sql = "";
-    $sql = "select codice_a_barre, codice_supermercato, prezzo from prodotti_supermercati where codice_supermercato = '$supermercato'";
+    $supermercato = $con->real_escape_string($_POST["supermarket"]);
+    $sql = "select * from prodotti_supermercati where codice_supermercato = '$supermercato'";
     /*Il metodo query lancia la query sql e restituisce il recordset corrispondente*/
     $rs = $con->query($sql);
     /*Controlla se il recordset esiste o no cioè se ci sono stati degli errori*/
