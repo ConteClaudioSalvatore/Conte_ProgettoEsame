@@ -70,7 +70,7 @@ function nuovoProdotto(code, buttonIndex) {
 					.append(
 						$("<input>")
 							.attr("type", "text")
-							.attr("id", "txtCatetorie")
+							.attr("id", "txtCategorie")
 							.attr("placeholder", "categoria1, categoria2, ...")
 							.addClass("form-control")
 					)
@@ -89,6 +89,23 @@ function nuovoProdotto(code, buttonIndex) {
 							.attr("type", "text")
 							.attr("id", "txtKeywords")
 							.attr("placeholder", "chiave1, chiave2, chiave3, ...")
+							.addClass("form-control")
+					)
+			)
+			.append(
+				$("<div></div>")
+					.addClass("form-group")
+					.append(
+						$("<label></label>")
+							.attr("for", "txtIngredienti")
+							.text("Ingredienti:")
+							.addClass("form-label")
+					)
+					.append(
+						$("<input>")
+							.attr("type", "text")
+							.attr("id", "txtIngredienti")
+							.attr("placeholder", "")
 							.addClass("form-control")
 					)
 			)
@@ -330,7 +347,7 @@ function nuovoProdotto(code, buttonIndex) {
 //type == 1 -> modifica prodotto
 function salvaProdotto(type) {
 	let barcode = $("#barcode").text();
-	let generic_name = $("#txtNome").val();
+	let generic_name = $("#txtNomeProdotto").val();
 	let categories = $("#txtCategorie").val();
 	let keywords = $("#txtKeywords").val();
 	let ingredients_text = $("#txtIngredienti").val();
@@ -354,14 +371,12 @@ function salvaProdotto(type) {
 		salt: salt,
 	};
 	let supermercato = $("#cmbSupermercato").val();
-	let image_url = imgPath;
 	let data = {
 		barcode: barcode,
 		generic_name: generic_name,
 		categories: categories,
 		keywords: keywords,
 		nutriments: JSON.stringify(nutriments),
-		image_front_url: image_url,
 		ingredients_text: ingredients_text,
 	};
 	if(type == 0)
@@ -375,44 +390,20 @@ function salvaProdotto(type) {
 	};
 	if (checkInput(input)) {
 		let imgData = new FormData();
-		imgData.append("image", $("#img").prop("files")[0]);
+		if($("#img").get(0).files.length>0)
+			imgData.append("image", $("#img").prop("files")[0]);
 		$.ajax({
-			url: "http://claudioconte.altervista.org/api/uploadImage.php",
+			url: "https://claudioconte.altervista.org/api/uploadImage.php",
 			type: "POST",
 			data: imgData,
 			processData: false,
 			contentType: false,
 			success: function (imgInsertedData) {
-				data.image_front_url = imgInsertedData.url;
+				if(type==0 || imgInsertedData.image!=undefined)
+					data.image_front_url = imgInsertedData.url;
 				let url = "https://claudioconte.altervista.org/api/caricaProdotto.php";
 				if (type == 1) url = "https://claudioconte.altervista.org/api/modificaProdotto.php";
-				$.ajax({
-					url: url,
-					method: "POST",
-					data: data,
-					success: function (data) {
-						console.log(data);
-						$.ajax({
-							url: "https://claudioconte.altervista.org/api/aggiungiProdottoASupermercato.php",
-							method: "POST",
-							data: {
-								supermarket:input.supermercato,
-								barcode: barcode,
-								prezzo: prezzo,
-							},
-							success: function (data) {
-								console.log(data);
-								if(data.err == -1){
-									$("#modal").modal("hide");
-									alert("Prodotto inserito correttamente!", null, "", "Ok");
-								}
-							}
-						})
-					},
-					error: function (err) {
-						console.log(err);
-					},
-				});
+				caricaOModificaProdotto(url, data, input, barcode, prezzo, type);
 			}
 		})
 		
@@ -430,6 +421,7 @@ function checkInput(input) {
 	) {
 		return false;
 	}
+	let nutriments = input.data.nutriments;
 	if (
 		nutriments["energy-kcal"] == "" ||
 		nutriments["energy"] == "" ||
@@ -450,4 +442,36 @@ function toFloat() {
 function toInt() {
 	let input = $(this);
 	input.val(parseInt(input.val()));
+}
+function caricaOModificaProdotto(url, data, input, barcode, prezzo, type){
+	$.ajax({
+		url: url,
+		method: "POST",
+		data: data,
+		success: function (data) {
+			console.log(data);
+			$.ajax({
+				url: "https://claudioconte.altervista.org/api/aggiungiProdottoASupermercato.php",
+				method: "POST",
+				data: {
+					supermarket:input.supermercato,
+					barcode: barcode,
+					prezzo: prezzo,
+				},
+				success: function (data) {
+					console.log(data);
+					if(data.err == -1){
+						$("#modal").modal("hide");
+						if(type==0)
+							alert("Prodotto inserito correttamente!", null, "", "Ok");
+						else
+							alert("Prodotto modificato correttamente!", null, "", "Ok");
+					}
+				}
+			})
+		},
+		error: function (err) {
+			console.log(err);
+		},
+	});
 }

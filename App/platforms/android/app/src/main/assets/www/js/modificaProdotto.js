@@ -88,6 +88,24 @@ function caricaModificaProdotto(barcode) {
                                     .addClass("form-group")
                                     .append(
                                         $("<label></label>")
+                                            .attr("for", "txtIngredienti")
+                                            .text("Categorie:")
+                                            .addClass("form-label")
+                                    )
+                                    .append(
+                                        $("<input>")
+                                            .attr("type", "text")
+                                            .attr("id", "txtIngredienti")
+                                            .attr("placeholder", "categoria1, categoria2, ...")
+                                            .addClass("form-control")
+                                            .val(data.ingredients_text)
+                                    )
+                            )
+                            .append(
+                                $("<div></div>")
+                                    .addClass("form-group")
+                                    .append(
+                                        $("<label></label>")
                                             .attr("for", "txtKeywords")
                                             .text("Chiavi di Ricerca:")
                                             .addClass("form-label")
