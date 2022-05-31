@@ -227,6 +227,7 @@ function creaBodyProdotto(modalBody, data) {
 										}
 										aggPrezzo.modal("show");
 									})
+									.css({ width: "100%"})
 				if (smProd.data != undefined) {
 					let tBodyPrezzi = tbPrezzi.children("tbody").eq(0);
 					let nPrezzi = 0;
