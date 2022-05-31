@@ -28,8 +28,8 @@ function onDeviceReady() {
 function barcodeScanner() {
 	cordova.plugins.barcodeScanner.scan(
 		mostraProdotto,
-		function (error) {
-			alert("prodotto non trovato");
+		function(error) {
+			alert("Scan del codice a barre fallito: " + error);
 		},
 		{
 			preferFrontCamera: false, // iOS and Android
@@ -61,8 +61,8 @@ function suggerimenti() {
 					if (data.product.length > 0) {
 						suggestions.empty();
 						data.product.forEach((product) => {
-							if(product.generic_name == "")
-								product.generic_name = "*senza nome*";
+							if (product.generic_name == "")
+								product.generic_name = "* senza nome *";
 							suggestions.append(
 								$("<div></div>")
 									.addClass("row")
@@ -119,11 +119,11 @@ function dialogAggiuntaPrezzo(barcode, modalBody, data) {
 								)
 								.append(
 									$("<button></button>")
-										.addClass("close")
+										.addClass("btn-close")
 										.attr("data-dismiss", "modal")
 										.attr("aria-label", "Close")
-										.on("click", function(e){
-											$(this).modal("dispose");
+										.on("click", function (e) {
+											$("#dialogAggiuntaPrezzo").modal("dispose");
 										})
 								)
 						)
@@ -177,15 +177,6 @@ function dialogAggiuntaPrezzo(barcode, modalBody, data) {
 										.addClass("btn-group")
 										.append(
 											$("<button></button>")
-												.addClass("btn btn-danger")
-												.attr("data-dismiss", "modal")
-												.text("Chiudi")
-												.on("click", function(){
-													$("#dialogAggiuntaPrezzo").modal("hide");
-												})
-										)
-										.append(
-											$("<button></button>")
 												.addClass("btn btn-success")
 												.attr("id", "btnAggiungiPrezzo")
 												.text("Aggiungi")
@@ -203,10 +194,20 @@ function dialogAggiuntaPrezzo(barcode, modalBody, data) {
 													}
 												})
 										)
+										.append(
+											$("<button></button>")
+												.addClass("btn btn-danger")
+												.attr("data-dismiss", "modal")
+												.text("Chiudi")
+												.on("click", function () {
+													$("#dialogAggiuntaPrezzo").modal("hide");
+													$("#dialogAggiuntaPrezzo").modal("dispose");
+												})
+										)
 								)
 						)
 				)
-		)
+		);
 }
 function controllaInputAggiuntaPrezzo() {
 	if ($("#txtPrezzo").val() == "") {
@@ -218,4 +219,21 @@ function controllaInputAggiuntaPrezzo() {
 		return false;
 	}
 	return true;
+}
+function caricaCmbSupermercati() {
+	let select = $("#cmbSupermercato");
+	select.empty();
+	select.append(
+		$("<option></option>").attr("value", "").text("Seleziona un supermercato")
+	);
+	for (let i = 0; i < superMarketsFullNames.length; i++) {
+		let smInfo = superMarketsFullNames[i].split(",");
+		let textValue = smInfo[0];
+		if (Number.isInteger(parseInt(smInfo[1]))) {
+			textValue += ", " + smInfo[2] + " " + smInfo[1];
+		} else {
+			textValue += ", " + smInfo[1];
+		}
+		select.append($("<option></option>").attr("value", i).text(textValue));
+	}
 }

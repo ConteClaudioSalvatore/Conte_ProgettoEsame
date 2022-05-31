@@ -7,8 +7,6 @@
     /*Controlla se il codice di errore è diverso da 0*/
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
-	$postdata = file_get_contents("php://input");
-
     $sql = "insert into prodotti(id, ";
     if($_POST['keywords'] != null)
         $sql .= "keywords, ";

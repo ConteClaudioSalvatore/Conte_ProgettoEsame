@@ -7,15 +7,9 @@
     /*Controlla se il codice di errore è diverso da 0*/
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
-    $nomeProdotto = $_POST['nomeProdotto'];
-    $barcode = $_POST['barcode'];
+    $supermercato = $_POST["supermarket"];
     $sql = "";
-    if($nomeProdotto != null)
-        $sql = "select * from prodotti where generic_name like '$nomeProdotto%' limit 25";
-    else if($barcode != null)
-        $sql = "select * from prodotti where id='$barcode'";
-    else
-        $sql = "select * from prodotti limit 10";
+    $sql = "select codice_a_barre, codice_supermercato, prezzo from prodotti_supermercati where codice_supermercato = '$supermercato'";
     /*Il metodo query lancia la query sql e restituisce il recordset corrispondente*/
     $rs = $con->query($sql);
     /*Controlla se il recordset esiste o no cioè se ci sono stati degli errori*/

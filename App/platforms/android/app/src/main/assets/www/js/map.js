@@ -58,11 +58,88 @@ function mappa() {
                 return feature;
             });
             if (feature) {
-              let n = "";
-              feature.name.split(",").forEach(nome=>{
-                n += nome.trim() + "\n";
-              });
-              alert(n);
+              let modal = $("#modal");
+              $("#modalTitle").text(feature.name.split(",")[0].trim());
+              modal.find(".modal-footer")
+              .empty()
+              .append(
+                $("<div></div>")
+                .addClass("btn-group")
+                .addClass("btn")
+                .append(
+                  $("<button></button>")
+                  .addClass("btn btn-danger")
+                  .text("Chiudi")
+                  .attr("data-bs-dismiss", "modal")
+                )
+              );
+              $.ajax({
+                url: "https://claudioconte.altervista.org/api/getProdottiSupermercato.php",
+                type: "POST",
+                data: {
+                  nome: feature.name
+                },
+                dataType: "json",
+                timeout: 2000,
+                success: function (data) {
+                  if(data.product != undefined && data.product.length>0){
+                    $("#modalBody").empty();
+                    data.product.forEach(prodotto => {
+                      $.ajax({
+                        url: "https://claudioconte.altervista.com/api/searchProdotto.php",
+                        data: { barcode : prodotto.codice_a_barre },
+                        type: "POST",
+                        dataType: "json",
+                        timeout: 2000,
+                        success: function (datiProdotto) {
+                          if(datiProdotto.product.length>0){
+                            let prodInfo = datiProdotto.product[0];
+                            if(prodInfo.generic_name == "")
+                              prodInfo.generic_name = "* senza nome *";
+                            modal
+                            .find("#modalBody")
+                            .append(
+                              $("<div></div>")
+                              .addClass("row py-3")
+                              .append(
+                                $("<div></div>")
+                                .addClass("col-md-10")
+                                .append(
+                                  $("<span></span>")
+                                    .addClass("text-center")
+                                    .text(prodInfo.generic_name)
+                                )
+                              )
+                              .append(
+                                $("<div></div>")
+                                .addClass("col-md-2")
+                                .append(
+                                  $("<span></span>")
+                                    .addClass("text-center font-weight-bold")
+                                    .text(prodotto.prezzo + " €")
+                                )
+                              )
+                            );
+                          }
+                        }
+                      })
+                    });
+                    modal.modal("show");
+                  }
+                  else{
+                    modal
+                    .find("#modalBody")
+                    .empty()
+                    .append(
+                      $("<div></div>")
+                        .addClass("alert alert-info")
+                        .text("Non ci sono ancora prodotti in questo supermercato, scansionali per inserirne di nuovi!")
+                        .css({borderRadius: "25px"})
+                    );
+                    modal.modal("show");
+                  }
+                }
+              })
             }
           });
         },

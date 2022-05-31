@@ -8,7 +8,9 @@
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
     $barcode = trim($_POST['barcode']);
-    $sql = "select prezzo, codice_supermercato from prodotti_supermercati where codice_a_barre = '$barcode'";
+    $sql = "select prezzo, codice_supermercato from prodotti_supermercati 
+            where codice_a_barre = '$barcode' 
+            order by prezzo";
     /*Il metodo query lancia la query sql e restituisce il recordset corrispondente*/
     $rs = $con->query($sql);
     /*Controlla se il recordset esiste o no cioè se ci sono stati degli errori*/

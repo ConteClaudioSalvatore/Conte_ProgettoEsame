@@ -45,25 +45,7 @@ function mostraProdotto(result) {
 							let aggPrezzo = dialogAggiuntaPrezzo(data.code, modalBody, data);
 							$("#dialogs").append(aggPrezzo);
 							//aggiungo i supermercati vicini alla combobox del prezzo
-							let select = $("#cmbSupermercato");
-							select.empty();
-							select.append(
-								$("<option></option>")
-									.attr("value", "")
-									.text("Seleziona un supermercato")
-							);
-							for (let i = 0; i < superMarketsFullNames.length; i++) {
-								let smInfo = superMarketsFullNames[i].split(",");
-								let textValue = smInfo[0];
-								if (Number.isInteger(parseInt(smInfo[1]))) {
-									textValue += ", " + smInfo[2] + " " + smInfo[1];
-								} else {
-									textValue += ", " + smInfo[1];
-								}
-								select.append(
-									$("<option></option>").attr("value", i).text(textValue)
-								);
-							}
+							caricaCmbSupermercati();
 							aggPrezzo.modal("show");
 							//modal.modal("show");
 						} else {
@@ -121,7 +103,11 @@ function creaBodyProdotto(modalBody, data) {
 				$("<span></span>")
 					.text("Codice: ")
 					.addClass("text-center my-2")
-					.append($("<strong></strong>").text(data.id))
+					.append(
+						$("<strong></strong>")
+						.text(data.id)
+						.attr("id", "codiceABarre")
+					)
 			);
 			if (
 				data.image_front_url.includes(
@@ -206,8 +192,7 @@ function creaBodyProdotto(modalBody, data) {
 							nutriment.includes("fat") &&
 							nutriments["saturated-fat"] != undefined
 						) {
-							nutrimentText +=
-								" (di cui saturi: " + nutriments["saturated-fat"] + ")";
+							nutrimentText += " (di cui saturi: " + nutriments["saturated-fat"] + ")";
 						}
 						tr.append($("<td></td>").text(nutrimentText));
 						tr.appendTo(tblBody);
@@ -215,29 +200,78 @@ function creaBodyProdotto(modalBody, data) {
 				}
 				tblBody.appendTo(nutrientsTable);
 				let tbPrezzi = $("<table></table>")
-					.addClass("table table-striped table-success")
+					.addClass("table table-striped")
 					.append(
 						$("<thead></thead>")
 							.append($("<th></th>").text("Supermercato"))
 							.append($("<th></th>").text("Prezzo"))
+					)
+					.append(
+						$("<tbody></tbody>")
 					);
+				let btnAddPrezzo = $("<button></button>")
+								   	.addClass("btn btn-outline-success")
+									.text("Aggiungi Prezzo")
+									.on("click", function () {
+										$("#modal").modal("hide");
+										let aggPrezzo = dialogAggiuntaPrezzo(data.id, modalBody, data);
+										$("#dialogs").append(aggPrezzo);
+										caricaCmbSupermercati();
+										if(smProd.data != undefined){
+											smProd.data.forEach(element=>{
+												let i = superMarketsFullNames.indexOf(element.codice_supermercato);
+												if(i != -1){
+													cmbSupermercati.children().eq(i+1).attr("disabled", true);
+												}
+											})
+										}
+										aggPrezzo.modal("show");
+									})
 				if (smProd.data != undefined) {
+					let tBodyPrezzi = tbPrezzi.children("tbody").eq(0);
+					let nPrezzi = 0;
 					smProd.data.forEach((element) => {
 						if(superMarketsFullNames.indexOf(element.codice_supermercato)!=-1){
 							let tr = $("<tr></tr>");
 							tr.append($("<td></td>").text(element.codice_supermercato));
 							tr.append($("<td></td>").text(element.prezzo));
-							tbPrezzi.append(tr);
-						}
-							
+							tBodyPrezzi.append(tr);
+							nPrezzi++;
+						}	
 					});
-					modalBody.append(tbPrezzi);
+					if(nPrezzi>0){
+						$("<tr></tr>")
+						.append(
+							$("<td></td>")
+								.attr("col-span", "2")
+								.append(btnAddPrezzo)
+						)
+						.appendTo(tBodyPrezzi)
+						modalBody.append(tbPrezzi);
+					}
+					else{
+						modalBody.append(
+							$("<div></div>")
+								.addClass("alert alert-warning")
+								.append(
+									$("<span></span>")
+										.text("Nessun prezzo trovato nei supermercati vicini per questo prodotto.")
+								)
+								.append(
+									btnAddPrezzo
+								)
+						);
+					}
 				} else
 					modalBody.append(
 						$("<div></div>")
 							.addClass("alert alert-warning")
-							.text(
-								"Nessun prezzo trovato nei supermercati vicini per questo prodotto."
+							.append(
+								$("<span></span>")
+									.text("Nessun prezzo trovato nei supermercati vicini per questo prodotto.")
+							)
+							.append(
+								btnAddPrezzo
 							)
 					);
 			}
