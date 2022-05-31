@@ -7,7 +7,7 @@
     /*Controlla se il codice di errore è diverso da 0*/
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
-    $barcode = $_POST['barcode'];
+    $barcode = trim($_POST['barcode']);
     $sql = "select prezzo, codice_supermercato from prodotti_supermercati where codice_a_barre = '$barcode'";
     /*Il metodo query lancia la query sql e restituisce il recordset corrispondente*/
     $rs = $con->query($sql);
@@ -24,12 +24,8 @@
         $vect = [];
         while ($record = $rs->fetch_assoc())
             array_push($vect, $record);
-        for($i = 0; $i < count($vect); $i++){
-            array_push($json->prezzo,$vect[$i]["prezzo"]);
-            array_push($json->supermarket,$vect[$i]["codice_supermercato"]);
-        }
-        $data->data = $json;
-        echo json_encode($data);
+        $json->data = $vect;
+        echo json_encode($json);
     }
     $con->close();
 ?>

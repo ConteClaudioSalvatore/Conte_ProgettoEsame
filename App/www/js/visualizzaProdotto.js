@@ -41,8 +41,10 @@ function mostraProdotto(result) {
 								modalTitle.text(data.generic_name.substring(0, 25) + "...");
 							else modalTitle.text("Prodotto");
 							inserisciProdottoSuDB(data);
-							creaBodyProdotto(modalBody, data);
-							$("#dialogs").append(dialogAggiuntaPrezzo);
+							//creaBodyProdotto(modalBody, data);
+							let aggPrezzo = dialogAggiuntaPrezzo(data.code, modalBody, data);
+							$("#dialogs").append(aggPrezzo);
+							//aggiungo i supermercati vicini alla combobox del prezzo
 							let select = $("#cmbSupermercato");
 							select.empty();
 							select.append(
@@ -62,8 +64,8 @@ function mostraProdotto(result) {
 									$("<option></option>").attr("value", i).text(textValue)
 								);
 							}
-							dialogAggiuntaPrezzo.children("select").append()
-							modal.modal("show");
+							aggPrezzo.modal("show");
+							//modal.modal("show");
 						} else {
 							navigator.notification.confirm(
 								"Il prodotto scansionato non esiste.\nVuoi aggiungerlo?", // message
@@ -87,7 +89,7 @@ function mostraProdotto(result) {
 
 function creaBodyProdotto(modalBody, data) {
 	let divIngredienti = $("<div></div>");
-	modalBody.html("");
+	modalBody.empty();
 	let nutrientsTable = $("<table></table>");
 	let divProdotto = $("<div></div>");
 	$.ajax({
@@ -221,10 +223,13 @@ function creaBodyProdotto(modalBody, data) {
 					);
 				if (smProd.data != undefined) {
 					smProd.data.forEach((element) => {
-						let tr = $("<tr></tr>");
-						tr.append($("<td></td>").text(element.supermarket));
-						tr.append($("<td></td>").text(element.prezzo));
-						tbPrezzi.append(tr);
+						if(superMarketsFullNames.indexOf(element.codice_supermercato)!=-1){
+							let tr = $("<tr></tr>");
+							tr.append($("<td></td>").text(element.codice_supermercato));
+							tr.append($("<td></td>").text(element.prezzo));
+							tbPrezzi.append(tr);
+						}
+							
 					});
 					modalBody.append(tbPrezzi);
 				} else

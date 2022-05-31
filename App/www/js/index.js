@@ -61,6 +61,8 @@ function suggerimenti() {
 					if (data.product.length > 0) {
 						suggestions.empty();
 						data.product.forEach((product) => {
+							if(product.generic_name == "")
+								product.generic_name = "*senza nome*";
 							suggestions.append(
 								$("<div></div>")
 									.addClass("row")
@@ -92,7 +94,7 @@ function suggerimenti() {
 		});
 	}, 100);
 }
-function dialogAggiuntaPrezzo(barcode) {
+function dialogAggiuntaPrezzo(barcode, modalBody, data) {
 	return $("<div></div>")
 		.addClass("modal fade")
 		.attr("id", "dialogAggiuntaPrezzo")
@@ -120,6 +122,9 @@ function dialogAggiuntaPrezzo(barcode) {
 										.addClass("close")
 										.attr("data-dismiss", "modal")
 										.attr("aria-label", "Close")
+										.on("click", function(e){
+											$(this).modal("dispose");
+										})
 								)
 						)
 						.append(
@@ -175,6 +180,9 @@ function dialogAggiuntaPrezzo(barcode) {
 												.addClass("btn btn-danger")
 												.attr("data-dismiss", "modal")
 												.text("Chiudi")
+												.on("click", function(){
+													$("#dialogAggiuntaPrezzo").modal("hide");
+												})
 										)
 										.append(
 											$("<button></button>")
@@ -184,6 +192,8 @@ function dialogAggiuntaPrezzo(barcode) {
 												.on("click", function (e) {
 													if (controllaInputAggiuntaPrezzo()) {
 														aggiungiPrezzo(
+															modalBody,
+															data,
 															barcode,
 															parseFloat($("#txtPrezzo").val()),
 															superMarketsFullNames[
@@ -197,9 +207,6 @@ function dialogAggiuntaPrezzo(barcode) {
 						)
 				)
 		)
-		.on("hidden.bs.modal", function (e) {
-			$(this).modal("dispose");
-		});
 }
 function controllaInputAggiuntaPrezzo() {
 	if ($("#txtPrezzo").val() == "") {
