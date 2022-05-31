@@ -158,3 +158,9 @@ button.mapOrientation:active {
 #suggestions .row:last-of-type {
 	border-bottom: none;
 }
+.btn{
+	border-radius: 25px;
+}
+.alert{
+	border-radius: 25px;
+}

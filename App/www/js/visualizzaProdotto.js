@@ -208,7 +208,7 @@ function creaBodyProdotto(modalBody, data) {
 						$("<tbody></tbody>")
 					);
 				let btnAddPrezzo = $("<button></button>")
-								   	.addClass("btn btn-outline-success")
+								   	.addClass("btn btn-outline-success bg-light mt-2")
 									.text("Aggiungi Prezzo")
 									.on("click", function () {
 										$("#modal").modal("hide");
