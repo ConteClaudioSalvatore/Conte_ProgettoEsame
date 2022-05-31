@@ -8,8 +8,9 @@
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
     if(!empty($_FILES["image"]["name"])){
-        $fileName = basename($_FILES["image"]["name"]); 
-        $fileType = pathinfo($fileName, PATHINFO_EXTENSION); 
+        $filePath = basename($_FILES["image"]["name"]); 
+        $fileType = pathinfo($filePath, PATHINFO_EXTENSION); 
+        $fileName = pathinfo($filePath, PATHINFO_FILENAME);
         $allowTypes = array('jpg','png','jpeg','gif'); 
         if(in_array($fileType, $allowTypes)){ 
             $image = $_FILES['image']['tmp_name']; 

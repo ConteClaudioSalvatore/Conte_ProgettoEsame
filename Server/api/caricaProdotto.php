@@ -24,7 +24,7 @@
         if($_POST['categories'] != null)
             $stmt->bind_param("sssissss", $barcode, $categories, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments);
         else
-            $stmt->bind_param("ssssissss", $barcode, $keywords, $categories, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments);
+            $stmt->bind_param("sssissss", $barcode, $keywords, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments);
         }
         
     else if($_POST['categories'] != null)
@@ -43,10 +43,7 @@
     $creator = $_POST['creator'];
     $created_t = floor(microtime(true) * 1000);
     $generic_name = $_POST['generic_name'];
-    if($_POST['image_front_url']!="")
-        $image_front_url = $_POST['image_front_url'];
-    else
-        $image_front_url = null;
+    $image_front_url = $_POST['image_front_url'];
     $ingredients_text = $_POST['ingredients_text'];
     $nutriments = $_POST['nutriments'];
     if($stmt->execute())

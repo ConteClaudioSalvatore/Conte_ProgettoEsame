@@ -9,13 +9,13 @@
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
     if(!empty($_GET["image_name"]) && !empty($_GET["image_ext"])){
         $fileName = $_GET["image_name"]; 
-        $fileType = $_GET["image_ext"]; 
-        $sql = "select image_data from images where image_name = '$fineName' and image_ext = '$fileExt'";
+        $fileExt = $_GET["image_ext"]; 
+        $sql = "select image_data from images where image_name = '$fileName' and image_ext = '$fileExt'";
         $result = $con->query($sql);
         if($result->num_rows > 0){
             $row = $result->fetch_assoc();
             $imageData = $row["image_data"];
-            $json->image = "data:image/jpg;charset=utf8;base64,$imageData";
+            $json->image = base64_encode($imageData);
             echo json_encode($json);
         }
         else

@@ -107,6 +107,7 @@ function nuovoProdotto(code, buttonIndex) {
 							.attr("id", "txtIngredienti")
 							.attr("placeholder", "")
 							.addClass("form-control")
+							.val("")
 					)
 			)
 			.append(
@@ -394,6 +395,47 @@ function salvaProdotto(type) {
 			imgData.append("image", $("#img").prop("files")[0]);
 		$.ajax({
 			url: "https://claudioconte.altervista.org/api/uploadImage.php",
+			xhr: function () {
+				let xhr = new window.XMLHttpRequest();
+				let mBody = $("#modal").find(".modal-body");
+				mBody
+				.append(
+					$("<div></div>")
+						.addClass("progress my-3")
+						.attr("id", "progress")
+						.css({
+							border:"1px solid #ddd",
+							height:"20px",
+							width:"100%",
+							backgroundColor:"#57aeff",
+							borderRadius:"25px"
+						})
+						.append(
+							$("<div></div>")
+								.addClass("progress-bar")
+								.attr("role", "progressbar")
+								.attr("aria-valuenow", "0")
+								.attr("aria-valuemin", "0")
+								.attr("aria-valuemax", "100")
+								.attr("id", "progressBar")
+								.css({
+									width:"0%",
+									backgroundColor:"#49ff61",
+									borderRadius:"25px"
+								})
+						)
+				)
+				mBody
+				.find("#progressBar")
+				.get(0).scrollIntoView();
+				xhr.upload.addEventListener("progress", function (evt) {
+					if (evt.lengthComputable) {
+						let percentComplete = evt.loaded / evt.total;
+						$("#progressBar").css("width", percentComplete * 100 + "%");
+					}
+				}, false);
+				return xhr;
+			},
 			type: "POST",
 			data: imgData,
 			processData: false,
@@ -421,17 +463,17 @@ function checkInput(input) {
 	) {
 		return false;
 	}
-	let nutriments = input.data.nutriments;
+	let nutriments = JSON.parse(input.data.nutriments);
 	if (
-		nutriments["energy-kcal"] == "" ||
-		nutriments["energy"] == "" ||
-		nutriments["fat"] == "" ||
-		nutriments["saturated-fat"] == "" ||
-		nutriments["fiber"] == "" ||
-		nutriments["proteins"] == "" ||
-		nutriments["salt"] == ""
+		nutriments["energy-kcal"] == null &&
+		nutriments["energy"] == null &&
+		nutriments["fat"] == null &&
+		nutriments["saturated-fat"] == null &&
+		nutriments["fiber"] == null &&
+		nutriments["proteins"] == null &&
+		nutriments["salt"] == null
 	) {
-		input.data.nutriments = undefined;
+		input.data.nutriments = null;
 	}
 	return true;
 }
@@ -448,18 +490,18 @@ function caricaOModificaProdotto(url, data, input, barcode, prezzo, type){
 		url: url,
 		method: "POST",
 		data: data,
+		timeout: 5000,
 		success: function (data) {
-			console.log(data);
 			$.ajax({
 				url: "https://claudioconte.altervista.org/api/aggiungiProdottoASupermercato.php",
 				method: "POST",
+				timeout: 5000,
 				data: {
-					supermarket:input.supermercato,
+					supermarket:superMarketsFullNames[input.supermercato],
 					barcode: barcode,
 					prezzo: prezzo,
 				},
 				success: function (data) {
-					console.log(data);
 					if(data.err == -1){
 						$("#modal").modal("hide");
 						if(type==0)
@@ -467,11 +509,12 @@ function caricaOModificaProdotto(url, data, input, barcode, prezzo, type){
 						else
 							alert("Prodotto modificato correttamente!", null, "", "Ok");
 					}
+				},
+				error: function (err) {
+					console.log(err);
 				}
 			})
 		},
-		error: function (err) {
-			console.log(err);
-		},
+		
 	});
 }

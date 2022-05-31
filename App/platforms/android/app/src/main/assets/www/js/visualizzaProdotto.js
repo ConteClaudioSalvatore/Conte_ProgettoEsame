@@ -24,7 +24,8 @@ function mostraProdotto(result) {
 						modalTitle.text(data.generic_name.substring(0, 25) + "...");
 					else modalTitle.text(data.generic_name);
 				} else modalTitle.text("Prodotto");
-				data.nutriments = JSON.parse(data.nutriments);
+				if (data.nutriments != undefined && data.nutriments != "")
+					data.nutriments = JSON.parse(data.nutriments);
 				creaBodyProdotto(modalBody, data);
 				modal.modal("show");
 			} else {
@@ -102,9 +103,7 @@ function creaBodyProdotto(modalBody, data) {
 					.text("Codice: ")
 					.addClass("text-center my-2")
 					.append(
-						$("<strong></strong>")
-						.text(data.id)
-						.attr("id", "codiceABarre")
+						$("<strong></strong>").text(data.id).attr("id", "codiceABarre")
 					)
 			);
 			if (
@@ -112,16 +111,20 @@ function creaBodyProdotto(modalBody, data) {
 					"https://claudioconte.altervista.org/api/getImage.php"
 				)
 			) {
+				navigator.splashscreen.show();
 				$.ajax({
 					url: data.image_front_url,
 					method: "get",
-					dataType: "json",
 					async: false,
 					success: function (imgTrueUrl) {
-						data.image_front_url = imgTrueUrl.image;
+						data.image_front_url = "data:image/jpg;charset=utf8;base64," + imgTrueUrl.image;
 					},
+					error: function (err) {
+						console.log(err);
+					}
 				});
 			}
+			navigator.splashscreen.hide();
 			modalBody.append(
 				divProdotto.addClass("row").append(
 					$("<div></div>")
@@ -136,7 +139,7 @@ function creaBodyProdotto(modalBody, data) {
 						)
 				)
 			);
-			if (data.ingredients_text != undefined) {
+			if (data.ingredients_text != undefined && data.ingredients_text != "") {
 				divIngredienti.html(data.ingredients_text);
 				divProdotto.append(
 					$("<div></div>")
@@ -149,7 +152,7 @@ function creaBodyProdotto(modalBody, data) {
 				);
 			}
 			let nutriments = data.nutriments;
-			if (nutriments != undefined) {
+			if (nutriments != undefined && nutriments != "") {
 				nutrientsTable.addClass("table");
 				nutrientsTable
 					.append(
@@ -190,90 +193,90 @@ function creaBodyProdotto(modalBody, data) {
 							nutriment.includes("fat") &&
 							nutriments["saturated-fat"] != undefined
 						) {
-							nutrimentText += " (di cui saturi: " + nutriments["saturated-fat"] + ")";
+							nutrimentText +=
+								" (di cui saturi: " + nutriments["saturated-fat"] + ")";
 						}
 						tr.append($("<td></td>").text(nutrimentText));
 						tr.appendTo(tblBody);
 					}
 				}
 				tblBody.appendTo(nutrientsTable);
-				let tbPrezzi = $("<table></table>")
-					.addClass("table table-striped")
-					.append(
-						$("<thead></thead>")
-							.append($("<th></th>").text("Supermercato"))
-							.append($("<th></th>").text("Prezzo"))
-					)
-					.append(
-						$("<tbody></tbody>")
-					);
-				let btnAddPrezzo = $("<button></button>")
-								   	.addClass("btn btn-outline-success bg-light mt-2")
-									.text("Aggiungi Prezzo")
-									.on("click", function () {
-										$("#modal").modal("hide");
-										let aggPrezzo = dialogAggiuntaPrezzo(data.id, modalBody, data);
-										$("#dialogs").append(aggPrezzo);
-										caricaCmbSupermercati();
-										if(smProd.data != undefined){
-											smProd.data.forEach(element=>{
-												let i = superMarketsFullNames.indexOf(element.codice_supermercato);
-												if(i != -1){
-													$("#cmbSupermercato").children().eq(i+1).attr("disabled", true);
-												}
-											})
-										}
-										aggPrezzo.modal("show");
-									})
-									.css({ width: "100%"})
-				if (smProd.data != undefined) {
-					let tBodyPrezzi = tbPrezzi.children("tbody").eq(0);
-					let nPrezzi = 0;
-					smProd.data.forEach((element) => {
-						if(superMarketsFullNames.indexOf(element.codice_supermercato)!=-1){
-							let tr = $("<tr></tr>");
-							tr.append($("<td></td>").text(element.codice_supermercato));
-							tr.append($("<td></td>").text(element.prezzo));
-							tBodyPrezzi.append(tr);
-							nPrezzi++;
-						}	
-					});
-					if(nPrezzi>0){
-						$("<tr></tr>")
-						.append(
-							$("<td></td>")
-								.attr("colspan", "2")
-								.append(btnAddPrezzo)
-						)
-						.appendTo(tBodyPrezzi)
-						modalBody.append(tbPrezzi);
+			}
+			let tbPrezzi = $("<table></table>")
+				.addClass("table table-striped")
+				.append(
+					$("<thead></thead>")
+						.append($("<th></th>").text("Supermercato"))
+						.append($("<th></th>").text("Prezzo"))
+				)
+				.append($("<tbody></tbody>"));
+			let btnAddPrezzo = $("<button></button>")
+				.addClass("btn btn-outline-success bg-light mt-2")
+				.text("Aggiungi Prezzo")
+				.on("click", function () {
+					$("#modal").modal("hide");
+					let aggPrezzo = dialogAggiuntaPrezzo(data.id, modalBody, data);
+					$("#dialogs").append(aggPrezzo);
+					caricaCmbSupermercati();
+					if (smProd.data != undefined) {
+						smProd.data.forEach((element) => {
+							let i = superMarketsFullNames.indexOf(
+								element.codice_supermercato
+							);
+							if (i != -1) {
+								$("#cmbSupermercato")
+									.children()
+									.eq(i + 1)
+									.attr("disabled", true);
+							}
+						});
 					}
-					else{
-						modalBody.append(
-							$("<div></div>")
-								.addClass("alert alert-warning")
-								.append(
-									$("<span></span>")
-										.text("Nessun prezzo trovato nei supermercati vicini per questo prodotto.")
-								)
-								.append(
-									btnAddPrezzo
-								)
-						);
+					aggPrezzo.modal("show");
+				})
+				.css({ width: "100%" });
+			if (smProd.data != undefined) {
+				let tBodyPrezzi = tbPrezzi.children("tbody").eq(0);
+				let nPrezzi = 0;
+				smProd.data.forEach((element) => {
+					if (
+						superMarketsFullNames.indexOf(element.codice_supermercato) != -1
+					) {
+						let tr = $("<tr></tr>");
+						tr.append($("<td></td>").text(element.codice_supermercato));
+						tr.append($("<td></td>").text(element.prezzo));
+						tBodyPrezzi.append(tr);
+						nPrezzi++;
 					}
-				} else
+				});
+				if (nPrezzi > 0) {
+					$("<tr></tr>")
+						.append($("<td></td>").attr("colspan", "2").append(btnAddPrezzo))
+						.appendTo(tBodyPrezzi);
+					modalBody.append(tbPrezzi);
+				} else {
 					modalBody.append(
 						$("<div></div>")
 							.addClass("alert alert-warning")
 							.append(
-								$("<span></span>")
-									.text("Nessun prezzo trovato nei supermercati vicini per questo prodotto.")
+								$("<span></span>").text(
+									"Nessun prezzo trovato nei supermercati vicini per questo prodotto."
+								)
 							)
-							.append(
-								btnAddPrezzo
-							)
+							.append(btnAddPrezzo)
 					);
-			}
+				}
+			} else
+				modalBody.append(
+					$("<div></div>")
+						.addClass("alert alert-warning")
+						.append(
+							$("<span></span>").text(
+								"Nessun prezzo trovato nei supermercati vicini per questo prodotto."
+							)
+						)
+						.append(btnAddPrezzo)
+				);
+
 			modalBody.append(
 				$("<div></div>")
 					.addClass("text-center")
