@@ -104,7 +104,7 @@ function mappa() {
                               .append(
                                 $("<div></div>")
                                 .addClass("row py-3")
-                                .attr("id", prodInfo.id)
+                                .attr("barcode", prodInfo.id)
                                 .append(
                                   $("<div></div>")
                                   .addClass("col-9 text-center")
@@ -122,7 +122,7 @@ function mappa() {
                                   )
                                 )
                                 .on("click", function(e){
-                                  let barcode = $(this).attr("id");
+                                  let barcode = {text:$(this).attr("barcode")};
                                   $("#modal").modal("hide");
                                   mostraProdotto(barcode);
                                 })
