@@ -117,11 +117,12 @@ function creaBodyProdotto(modalBody, data) {
 					method: "get",
 					async: false,
 					success: function (imgTrueUrl) {
-						data.image_front_url = "data:image/jpg;charset=utf8;base64," + imgTrueUrl.image;
+						data.image_front_url =
+							"data:image/jpg;charset=utf8;base64," + imgTrueUrl.image;
 					},
 					error: function (err) {
 						console.log(err);
-					}
+					},
 				});
 			}
 			navigator.splashscreen.hide();
@@ -207,7 +208,7 @@ function creaBodyProdotto(modalBody, data) {
 				.append(
 					$("<thead></thead>")
 						.append($("<th></th>").text("Supermercato"))
-						.append($("<th></th>").text("Prezzo"))
+						.append($("<th></th>").text("Prezzo (€)"))
 				)
 				.append($("<tbody></tbody>"));
 			let btnAddPrezzo = $("<button></button>")
@@ -238,13 +239,31 @@ function creaBodyProdotto(modalBody, data) {
 				let tBodyPrezzi = tbPrezzi.children("tbody").eq(0);
 				let nPrezzi = 0;
 				smProd.data.forEach((element) => {
+					let index = superMarketsFullNames.indexOf(element.codice_supermercato);
 					if (
-						superMarketsFullNames.indexOf(element.codice_supermercato) != -1
+						index != -1
 					) {
 						let tr = $("<tr></tr>");
-						tr.append($("<td></td>").text(element.codice_supermercato));
+						let smInfo = element.codice_supermercato.split(",");
+						let textValue = smInfo[0];
+						if (Number.isInteger(parseInt(smInfo[1]))) {
+							textValue += ", " + smInfo[2] + " " + smInfo[1];
+						} else {
+							textValue += ", " + smInfo[1];
+						}
+						tr.append($("<td></td>").text(textValue));
 						tr.append($("<td></td>").text(element.prezzo));
 						tBodyPrezzi.append(tr);
+						tr.on("click", function (){
+							$("#modal").modal("hide");
+							let aggPrezzo = dialogAggiuntaPrezzo(data.id, modalBody, data);
+							$("#dialogs").append(aggPrezzo);
+							caricaCmbSupermercati(
+								modifica=true, 
+								smVal=index
+							);
+							aggPrezzo.modal("show");
+						})
 						nPrezzi++;
 					}
 				});

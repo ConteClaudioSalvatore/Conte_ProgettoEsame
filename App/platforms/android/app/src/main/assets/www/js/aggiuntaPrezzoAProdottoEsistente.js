@@ -11,6 +11,7 @@ function aggiungiPrezzo(modalBody, dataProd, barcode, prezzo, supermercato){
             if(data.err == -1){
                 console.log("prezzo aggiunto con successo");
                 $("#dialogAggiuntaPrezzo").modal("hide");
+                $("#dialogAggiuntaPrezzo").remove();
                 creaBodyProdotto(modalBody, dataProd);
                 $("#modal").modal("show");
             }
@@ -18,6 +19,7 @@ function aggiungiPrezzo(modalBody, dataProd, barcode, prezzo, supermercato){
         error: function(error){
             $("#dialogAggiuntaPrezzo").modal("hide");
             creaBodyProdotto(modalBody, dataProd);
+            $("#dialogAggiuntaPrezzo").remove();
             $("#modal").modal("show");
             console.log(error);
         }

@@ -24,6 +24,10 @@
                 echo "Errore nell'inserimento dell'immagine";
         }
     }
+    else{
+        $json->message = "Nessuna immagine da inserire";
+        echo json_encode($json);
+    }
     $con->close();
-    exit;
+    
 ?>

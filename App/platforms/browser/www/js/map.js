@@ -58,11 +58,99 @@ function mappa() {
                 return feature;
             });
             if (feature) {
-              let n = "";
-              feature.name.split(",").forEach(nome=>{
-                n += nome.trim() + "\n";
-              });
-              alert(n);
+              let modal = $("#modal");
+              $("#modalTitle").text(feature.name.split(",")[0].trim());
+              modal.find(".modal-footer")
+              .empty()
+              .append(
+                $("<div></div>")
+                .addClass("btn-group")
+                .addClass("btn")
+                .append(
+                  $("<button></button>")
+                  .addClass("btn btn-danger")
+                  .text("Chiudi")
+                  .attr("data-bs-dismiss", "modal")
+                )
+              );
+              $.ajax({
+                url: "https://claudioconte.altervista.org/api/getProdottiSupermercato.php",
+                type: "POST",
+                data: {
+                  supermarket: feature.name
+                },
+                dataType: "json",
+                timeout: 2000,
+                success: function (data) {
+                  if(data.product != undefined){
+                    data.product = JSON.parse(data.product);
+                    $("#modalBody").empty();
+                    if(data.product.length > 0){
+                      data.product.forEach(prodotto => {
+                        $.ajax({
+                          url: "https://claudioconte.altervista.org/api/searchProdotto.php",
+                          data: { barcode : prodotto.codice_a_barre },
+                          type: "POST",
+                          dataType: "json",
+                          timeout: 2000,
+                          success: function (datiProdotto) {
+                            datiProdotto.product = JSON.parse(datiProdotto.product);
+                            if(datiProdotto.product.length>0){
+                              let prodInfo = datiProdotto.product[0];
+                              if(prodInfo.generic_name == "")
+                                prodInfo.generic_name = "* senza nome *";
+                              modal
+                              .find("#modalBody")
+                              .append(
+                                $("<div></div>")
+                                .addClass("row py-3")
+                                .attr("id", prodInfo.id)
+                                .append(
+                                  $("<div></div>")
+                                  .addClass("col-9 text-center")
+                                  .append(
+                                    $("<span></span>")
+                                      .text(prodInfo.generic_name)
+                                  )
+                                )
+                                .append(
+                                  $("<div></div>")
+                                  .addClass("col-3 text-center")
+                                  .append(
+                                    $("<span></span>")
+                                      .append("<strong>"+prodotto.prezzo+"</strong> €")
+                                  )
+                                )
+                                .on("click", function(e){
+                                  let barcode = $(this).attr("id");
+                                  $("#modal").modal("hide");
+                                  mostraProdotto(barcode);
+                                })
+                              );
+                            }
+                          }
+                        })
+                      });
+                      modal.modal("show");
+                    }
+                  }
+                  else{
+                    modal
+                    .find("#modalBody")
+                    .empty()
+                    .append(
+                      $("<div></div>")
+                        .addClass("alert alert-info")
+                        .text("Non ci sono ancora prodotti in questo supermercato, scansionali per inserirne di nuovi!")
+                        .css({borderRadius: "25px"})
+                    );
+                    modal.modal("show");
+                  }
+                },
+                error: function (err) {
+                  console.log(err)
+                }
+              })
             }
           });
         },
@@ -79,7 +167,7 @@ function mappa() {
       );
     },
     error: function (e) {
-      alert("Error: " + e);
+      console.lgo("Error: " , e);
     },
   });
   
@@ -170,7 +258,7 @@ function addSupermarketMarkers(){
       });
     },
     error: function (e) {
-      alert("Error: " + e);
+      console.log("Error: " , e);
     }
   });
 }
@@ -195,7 +283,7 @@ async function getSupermarkets(data){
     url: url,
     type: "GET",
     error: function (e) {
-      alert("Error: " + e);
+      console.log("Error: " , e);
     }
   })
 }

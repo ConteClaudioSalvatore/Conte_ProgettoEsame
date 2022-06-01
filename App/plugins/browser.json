@@ -22,6 +22,9 @@
     },
     "cordova-plugin-splashscreen": {
       "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
+    },
+    "cordova-plugin-camera": {
+      "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
     }
   },
   "dependent_plugins": {}

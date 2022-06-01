@@ -280,7 +280,8 @@ function nuovoProdotto(code, buttonIndex) {
 						$("<input>")
 							.attr("id", "img")
 							.attr("type", "file")
-							.attr("accept", "image/*;capture=camera")
+							.attr("accept", "image/*")
+							.attr("capture", "enviroment")
 							.addClass("form-control")
 					)
 			)
@@ -398,6 +399,9 @@ function salvaProdotto(type) {
 			xhr: function () {
 				let xhr = new window.XMLHttpRequest();
 				let mBody = $("#modal").find(".modal-body");
+				if($("#progress").length!=0){
+					$("#progress").remove();
+				}
 				mBody
 				.append(
 					$("<div></div>")
@@ -515,6 +519,9 @@ function caricaOModificaProdotto(url, data, input, barcode, prezzo, type){
 				}
 			})
 		},
-		
+		error: function (err)
+		{
+			console.log(err);
+		}
 	});
 }

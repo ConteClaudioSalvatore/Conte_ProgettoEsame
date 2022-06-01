@@ -7,44 +7,27 @@
     /*Controlla se il codice di errore è diverso da 0*/
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
-    $sql = "update prodotti set ";
-    if($_POST['keywords'] != null)
-        $sql .= "keywords = ?, ";
-    if($_POST['categories'] != null)
-        $sql .= "categories = ?, ";
-    $sql.="last_editor = ?, last_edited_t = ?, generic_name = ?, ";
-    if($_POST['image_front_url'] != null)
-        $sql .= "image_front_url = ?, ";
-    $sql = "ingredients_text = ?, nutriments = ? 
-            where id = ?";
-    $stmt = $con->prepare($sql);
-    if($_POST['keywords'] != null){
-        if($_POST['categories'] != null)
-            $stmt->bind_param("sssissss", $categories, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments, $barcode);
-        else
-            $stmt->bind_param("ssssissss", $keywords, $categories, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments, $barcode);
-        }
-        
-    else if($_POST['categories'] != null)
-        $stmt->bind_param("sssissss", $categories, $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments,$barcode);
-    else
-        $stmt->bind_param("ssisss", $creator, $created_t, $generic_name, $image_front_url, $ingredients_text, $nutriments, $barcode);
     $barcode = $_POST['barcode'];
-    if($_POST['keywords'] != "")
-        $keywords = $_POST['keywords'];
-    else
-        $keywords = null;
-    if($_POST['categories'] != "")
-        $categories = $_POST['categories'];
-    else
-        $categories = null;
+    $keywords = $_POST['keywords'];
+    $categories = $_POST['categories'];
     $creator = $_POST['last_editor'];
     $created_t = floor(microtime(true) * 1000);
     $generic_name = $_POST['generic_name'];
     $image_front_url = $_POST['image_front_url'];
     $ingredients_text = $_POST['ingredients_text'];
     $nutriments = $_POST['nutriments'];
-    if($stmt->execute())
+    $sql = "update prodotti set ";
+    if($_POST['keywords'] != null)
+        $sql .= "keywords = '".$con->real_escape_string($keywords)."', ";
+    if($_POST['categories'] != null)
+        $sql .= "categories = '".$con->real_escape_string($categories)."', ";
+    $sql.="last_editor = '".$con->real_escape_string($creator)."', last_edited_t = $created_t, generic_name = '".$con->real_escape_string($generic_name)."', ";
+    if($_POST['image_front_url'] != null)
+        $sql .= "image_front_url = '".$image_front_url."', ";
+    $sql.= "ingredients_text = '".$con->real_escape_string($ingredients_text)."', nutriments = '".$nutriments."'
+            where id = '$barcode'";
+    $rs = $con->query($sql);
+    if($con->affected_rows>0)
     {
         $sql = "select * from prodotti_supermercati where codice_a_barre = '$barcode' and codice_supermercato = '$creator'";
         $rs = $con->query($sql);
@@ -63,7 +46,5 @@
         echo json_encode($json);
     }
     else
-        echo "Errore nell'inserimento del prodotto";
-    $stmt->close();
+        echo "Errore nell'aggiornamento del prodotto";
     $con->close();
-?>

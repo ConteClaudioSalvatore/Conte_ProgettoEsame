@@ -167,7 +167,7 @@ function mappa() {
       );
     },
     error: function (e) {
-      alert("Error: " + e);
+      console.lgo("Error: " , e);
     },
   });
   
@@ -258,7 +258,7 @@ function addSupermarketMarkers(){
       });
     },
     error: function (e) {
-      alert("Error: " + e);
+      console.log("Error: " , e);
     }
   });
 }
@@ -283,7 +283,7 @@ async function getSupermarkets(data){
     url: url,
     type: "GET",
     error: function (e) {
-      alert("Error: " + e);
+      console.log("Error: " , e);
     }
   })
 }

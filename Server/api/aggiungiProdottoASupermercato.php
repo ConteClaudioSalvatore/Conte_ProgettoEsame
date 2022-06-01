@@ -27,7 +27,11 @@
         $stmt->execute();
         if($stmt->num_rows()==0){
             $stmt->close();
-            $sql = "insert into prodotti_supermercati(codice_a_barre, codice_supermercato, prezzo) values('$barcode','$supermarket',".floatval($prezzo).")";
+            $sql = "insert into prodotti_supermercati(codice_a_barre, codice_supermercato, prezzo) 
+                    values(
+                        '$barcode',
+                        '$supermarket',
+                        ".floatval($prezzo).")";
             $rs = $con->query($sql);
             if($rs == true){
                 $json->err = -1;
@@ -39,7 +43,24 @@
             $con->close();
         }
         else
-            echo json_encode("{err:2,message:'Prodotto già presente nel supermercato'}");
+        {
+            $stmt->close();
+            $sql = "update prodotti_supermercati 
+                    set 
+                    prezzo = ".floatval($prezzo)." 
+                    where 
+                        codice_a_barre = '$barcode'
+                        and 
+                        codice_supermercato = '$supermarket'";
+            $rs = $con->query($sql);
+            if($rs == true){
+                $json->err = -1;
+                $json->msg = "Prodotto modificato nel supermercato";
+                echo json_encode($json);
+            }
+            else
+                echo json_encode("{err:1,message:\"Errore nella modifica".$rs->num_rows."\", sql:\"$sql\"}");
+        }
     }
     catch(Exception $e){
         echo json_encode("{err:1,message:'Errore nell'inserimento $e'}");

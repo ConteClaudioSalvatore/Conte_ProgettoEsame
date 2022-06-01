@@ -23,6 +23,10 @@
     },
     "cordova-plugin-splashscreen": {
       "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
+    },
+    "cordova-plugin-camera": {
+      "ANDROIDX_CORE_VERSION": "1.6.+",
+      "PACKAGE_NAME": "claudiosalvatore.conte.dove_conviene"
     }
   },
   "dependent_plugins": {}
