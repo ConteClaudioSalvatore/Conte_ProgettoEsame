@@ -9,7 +9,7 @@
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
     $sql = "update prodotti_supermercati set ";
     $sql .= "prezzo = ? ";
-    $sql .= "where codice_supermercato = ? and codice_a_barre = ?";
+    $sql .= "where codice_supermercato = (select id from supermercati where descrizione = ? limit 1) and codice_a_barre = ?";
     $stmt = $con->prepare($sql);
     $stmt->bind_param("dss", $prezzo, $supermercato, $barcode);
     $barcode = $_POST["barcode"];

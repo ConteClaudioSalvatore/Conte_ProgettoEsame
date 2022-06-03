@@ -342,6 +342,8 @@ function nuovoProdotto(code, buttonIndex) {
 				textValue += ", " + smInfo[1];
 			}
 			select.append($("<option></option>").attr("value", i).text(textValue));
+			if(localStorage.getItem("creator")!=null && localStorage.getItem("creator")!=undefined)
+				$("#txtNomeCreatore").val(localStorage.getItem("creator"));
 		}
 	}
 }
@@ -391,13 +393,23 @@ function salvaProdotto(type) {
 		data: data,
 	};
 	if (checkInput(input)) {
+		localStorage.setItem("creator", creator);
 		let imgData = new FormData();
-		if($("#img").get(0).files.length>0)
-			imgData.append("image", $("#img").prop("files")[0]);
+		if($("#img").get(0).files.length>0){
+			resizeImage({
+				file:  $("#img").prop("files")[0],
+				maxSize: 800
+			}).then((resizedImage)=>{
+				resizedImage.name = $("#img").prop("files")[0].name;
+				imgData.append("image", resizedImage);
+			}).catch((err)=>{
+				console.log(err);
+			})
+		}
 		$.ajax({
 			url: "https://claudioconte.altervista.org/api/uploadImage.php",
 			xhr: function () {
-				let xhr = new window.XMLHttpRequest();
+				let xhr = new XMLHttpRequest();
 				let mBody = $("#modal").find(".modal-body");
 				if($("#progress").length!=0){
 					$("#progress").remove();
@@ -490,6 +502,7 @@ function toInt() {
 	input.val(parseInt(input.val()));
 }
 function caricaOModificaProdotto(url, data, input, barcode, prezzo, type){
+	data.supermarket = input.supermercato;
 	$.ajax({
 		url: url,
 		method: "POST",

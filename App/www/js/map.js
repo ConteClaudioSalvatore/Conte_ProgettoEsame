@@ -4,7 +4,7 @@ let map;
 let layerUserMarker;
 let positionTracking;
 let supermarketInfo;
-let superMarketsFullNames =[] ;
+let superMarketsFullNames = [] ;
 let marker;
 function mappa() {
   $(".mapOrientation").hide();
@@ -106,8 +106,13 @@ function mappa() {
                                 .addClass("row py-3")
                                 .attr("barcode", prodInfo.id)
                                 .append(
+                                  $("<img/>")
+                                    .addClass("col-2")
+                                    .attr("id", "img-"+prodInfo.id)
+                                )
+                                .append(
                                   $("<div></div>")
-                                  .addClass("col-9 text-center")
+                                  .addClass("col-6 text-center")
                                   .append(
                                     $("<span></span>")
                                       .text(prodInfo.generic_name)
@@ -127,6 +132,30 @@ function mappa() {
                                   mostraProdotto(barcode);
                                 })
                               );
+                              if (
+                                prodInfo.image_front_url.includes(
+                                  "https://claudioconte.altervista.org/api/getImage.php"
+                                )
+                              ) {
+                                $.ajax({
+                                  url: prodInfo.image_front_url,
+                                  method: "get",
+                                  async: false,
+                                  success: function (imgTrueUrl) {
+                                    prodInfo.image_front_url =
+                                      "data:image/jpg;charset=utf8;base64," + imgTrueUrl.image;
+                                  },
+                                  error: function (err) {
+                                    console.log(err);
+                                  },
+                                });
+                              }
+                              $("#img-"+prodInfo.id)
+                                .attr("src", prodInfo.image_front_url)
+                                .css({
+                                  "max-width": "100%",
+                                  "border-radius": "10px"
+                                })
                             }
                           }
                         })
@@ -246,6 +275,20 @@ function addSupermarketMarkers(){
           marker.name = supermarket.display_name;
           superMarketsFullNames.push(supermarket.display_name);
           vectorSource.addFeature(marker);
+          $.ajax({
+            url: "https://claudioconte.altervista.org/api/aggiungiSupermercato.php",
+            type: "POST",
+            data: {
+              supermarket: supermarket.display_name,
+            },
+            success: function (data) {
+              if(data.code == -1)
+                console.log(data.message);
+            },
+            error: function (err){
+              console.log(err);
+            }
+          })
         }) 
         var markerLayer = new ol.layer.Vector({
           visible: true,

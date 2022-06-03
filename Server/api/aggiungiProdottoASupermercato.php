@@ -21,7 +21,7 @@
             $supermarket = $con->real_escape_string($data->supermarket);
             $prezzo = $data->prezzo;
         }
-        $sql = "select * from prodotti_supermercati where codice_a_barre = ? and codice_supermercato = ?";
+        $sql = "select * from prodotti_supermercati where codice_a_barre = ? and codice_supermercato = (select id from supermercati where descrizione = ? limit 1)";
         $stmt = $con->prepare($sql);
         $stmt->bind_param("ss", $barcode, $supermarket);
         $stmt->execute();
@@ -30,7 +30,7 @@
             $sql = "insert into prodotti_supermercati(codice_a_barre, codice_supermercato, prezzo) 
                     values(
                         '$barcode',
-                        '$supermarket',
+                        (select id from supermercati where descrizione = '$supermarket' limit 1),
                         ".floatval($prezzo).")";
             $rs = $con->query($sql);
             if($rs == true){
@@ -51,7 +51,7 @@
                     where 
                         codice_a_barre = '$barcode'
                         and 
-                        codice_supermercato = '$supermarket'";
+                        codice_supermercato = (select id from supermercati where descrizione = '$supermarket' limit 1)";
             $rs = $con->query($sql);
             if($rs == true){
                 $json->err = -1;

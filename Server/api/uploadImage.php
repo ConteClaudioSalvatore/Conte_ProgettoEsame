@@ -15,7 +15,12 @@
         if(in_array($fileType, $allowTypes)){ 
             $image = $_FILES['image']['tmp_name']; 
             $imgContent = addslashes(file_get_contents($image)); 
-            $sql = "insert into images(image_name, image_ext, image_data) values('$fileName', '$fileType', '$imgContent')";
+            $sql = "select * from images where image_name = '$fileName' and image_ext = '$fileType'";
+            $rs = $con->query($sql);
+            if($rs->num_rows == 0)
+                $sql = "insert into images(image_name, image_ext, image_data) values('$fileName', '$fileType', '$imgContent')";
+            else
+                $sql = "update images set image_data = '$imgContent' where image_name = '$fileName' and image_ext = '$fileType'";
             if($con->query($sql)){
                 $json->url = "https://claudioconte.altervista.org/api/getImage.php?image_name=$fileName&image_ext=$fileType";
                 echo json_encode($json);

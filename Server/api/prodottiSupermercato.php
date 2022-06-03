@@ -8,7 +8,8 @@
     if ($con->connect_errno)
         die("Errore connessione database " . $con->connect_errno . " " . $con->connect_error);
     $barcode = trim($_POST['barcode']);
-    $sql = "select prezzo, codice_supermercato from prodotti_supermercati 
+    $sql = "select as.prezzo as prezzo, s.descrizione as codice_supermercato
+            from prodotti_supermercati as ps left join supermercati as s on as 
             where codice_a_barre = '$barcode' 
             order by prezzo";
     /*Il metodo query lancia la query sql e restituisce il recordset corrispondente*/
