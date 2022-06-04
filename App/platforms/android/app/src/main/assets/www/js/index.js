@@ -226,7 +226,7 @@ function controllaInputAggiuntaPrezzo() {
 	}
 	return true;
 }
-function caricaCmbSupermercati(modifica = false, smVal = undefined) {
+function caricaCmbSupermercati() {
 	let select = $("#cmbSupermercato");
 	select.empty();
 	select.append(
@@ -241,9 +241,6 @@ function caricaCmbSupermercati(modifica = false, smVal = undefined) {
 			textValue += ", " + smInfo[1];
 		}
 		select.append($("<option></option>").attr("value", i).text(textValue));
-	}
-	if(modifica){
-		select.val(smVal);
 	}
 }
 function displayResult(text){

@@ -242,9 +242,6 @@ function caricaCmbSupermercati() {
 		}
 		select.append($("<option></option>").attr("value", i).text(textValue));
 	}
-	if(modifica){
-		select.val(smVal);
-	}
 }
 function displayResult(text){
 	let toast = $("#resultDisplayer");
