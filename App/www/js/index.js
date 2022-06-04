@@ -226,7 +226,7 @@ function controllaInputAggiuntaPrezzo() {
 	}
 	return true;
 }
-function caricaCmbSupermercati(modifica = false, smVal = undefined) {
+function caricaCmbSupermercati() {
 	let select = $("#cmbSupermercato");
 	select.empty();
 	select.append(

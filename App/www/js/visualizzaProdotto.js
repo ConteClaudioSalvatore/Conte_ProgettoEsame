@@ -257,10 +257,7 @@ function creaBodyProdotto(modalBody, data) {
 							$("#modal").modal("hide");
 							let aggPrezzo = dialogAggiuntaPrezzo(data.id, modalBody, data);
 							$("#dialogs").append(aggPrezzo);
-							caricaCmbSupermercati(
-								modifica=true, 
-								smVal=index
-							);
+							caricaCmbSupermercati();
 							aggPrezzo.modal("show");
 						})
 						nPrezzi++;
