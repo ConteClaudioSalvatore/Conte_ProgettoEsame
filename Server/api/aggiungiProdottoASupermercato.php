@@ -36,6 +36,7 @@
             if($rs == true){
                 $json->err = -1;
                 $json->msg = "Prodotto aggiunto al supermercato";
+                $json->barcode = $barcode;
                 echo json_encode($json);
             }
             else
@@ -56,6 +57,7 @@
             if($rs == true){
                 $json->err = -1;
                 $json->msg = "Prodotto modificato nel supermercato";
+                $json->barcode = $barcode;
                 echo json_encode($json);
             }
             else

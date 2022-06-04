@@ -342,7 +342,10 @@ function nuovoProdotto(code, buttonIndex) {
 				textValue += ", " + smInfo[1];
 			}
 			select.append($("<option></option>").attr("value", i).text(textValue));
-			if(localStorage.getItem("creator")!=null && localStorage.getItem("creator")!=undefined)
+			if (
+				localStorage.getItem("creator") != null &&
+				localStorage.getItem("creator") != undefined
+			)
 				$("#txtNomeCreatore").val(localStorage.getItem("creator"));
 		}
 	}
@@ -383,10 +386,8 @@ function salvaProdotto(type) {
 		nutriments: JSON.stringify(nutriments),
 		ingredients_text: ingredients_text,
 	};
-	if(type == 0)
-		data.creator = creator;
-	else
-		data.last_editor = creator;
+	if (type == 0) data.creator = creator;
+	else data.last_editor = creator;
 	let input = {
 		supermercato: supermercato,
 		prezzo: prezzo,
@@ -395,76 +396,81 @@ function salvaProdotto(type) {
 	if (checkInput(input)) {
 		localStorage.setItem("creator", creator);
 		let imgData = new FormData();
-		if($("#img").get(0).files.length>0){
+		let url = "https://claudioconte.altervista.org/api/caricaProdotto.php";
+		if (type == 1)
+			url = "https://claudioconte.altervista.org/api/modificaProdotto.php";
+		if ($("#img").get(0).files.length > 0) {
 			resizeImage({
-				file:  $("#img").prop("files")[0],
-				maxSize: 800
-			}).then((resizedImage)=>{
-				resizedImage.name = $("#img").prop("files")[0].name;
-				imgData.append("image", resizedImage);
-			}).catch((err)=>{
-				console.log(err);
+				file: $("#img").prop("files")[0],
+				maxSize: 800,
 			})
-		}
-		$.ajax({
-			url: "https://claudioconte.altervista.org/api/uploadImage.php",
-			xhr: function () {
-				let xhr = new XMLHttpRequest();
-				let mBody = $("#modal").find(".modal-body");
-				if($("#progress").length!=0){
-					$("#progress").remove();
-				}
-				mBody
-				.append(
-					$("<div></div>")
-						.addClass("progress my-3")
-						.attr("id", "progress")
-						.css({
-							border:"1px solid #ddd",
-							height:"20px",
-							width:"100%",
-							backgroundColor:"#57aeff",
-							borderRadius:"25px"
-						})
-						.append(
-							$("<div></div>")
-								.addClass("progress-bar")
-								.attr("role", "progressbar")
-								.attr("aria-valuenow", "0")
-								.attr("aria-valuemin", "0")
-								.attr("aria-valuemax", "100")
-								.attr("id", "progressBar")
-								.css({
-									width:"0%",
-									backgroundColor:"#49ff61",
-									borderRadius:"25px"
-								})
-						)
-				)
-				mBody
-				.find("#progressBar")
-				.get(0).scrollIntoView();
-				xhr.upload.addEventListener("progress", function (evt) {
-					if (evt.lengthComputable) {
-						let percentComplete = evt.loaded / evt.total;
-						$("#progressBar").css("width", percentComplete * 100 + "%");
-					}
-				}, false);
-				return xhr;
-			},
-			type: "POST",
-			data: imgData,
-			processData: false,
-			contentType: false,
-			success: function (imgInsertedData) {
-				if(type==0 || imgInsertedData.image!=undefined)
-					data.image_front_url = imgInsertedData.url;
-				let url = "https://claudioconte.altervista.org/api/caricaProdotto.php";
-				if (type == 1) url = "https://claudioconte.altervista.org/api/modificaProdotto.php";
-				caricaOModificaProdotto(url, data, input, barcode, prezzo, type);
-			}
-		})
-		
+				.then((resizedImage) => {
+					imgData.append("image", resizedImage);
+					$.ajax({
+						url: "https://claudioconte.altervista.org/api/uploadImage.php",
+						xhr: function () {
+							let xhr = new XMLHttpRequest();
+							let mBody = $("#modal").find(".modal-body");
+							if ($("#progress").length != 0) {
+								$("#progress").remove();
+							}
+							mBody.append(
+								$("<div></div>")
+									.addClass("progress my-3")
+									.attr("id", "progress")
+									.css({
+										border: "1px solid #ddd",
+										height: "20px",
+										width: "100%",
+										backgroundColor: "#57aeff",
+										borderRadius: "25px",
+									})
+									.append(
+										$("<div></div>")
+											.addClass("progress-bar")
+											.attr("role", "progressbar")
+											.attr("aria-valuenow", "0")
+											.attr("aria-valuemin", "0")
+											.attr("aria-valuemax", "100")
+											.attr("id", "progressBar")
+											.css({
+												width: "0%",
+												backgroundColor: "#49ff61",
+												borderRadius: "25px",
+											})
+									)
+							);
+							mBody.find("#progressBar").get(0).scrollIntoView();
+							xhr.upload.addEventListener(
+								"progress",
+								function (evt) {
+									if (evt.lengthComputable) {
+										let percentComplete = evt.loaded / evt.total;
+										$("#progressBar").css("width", percentComplete * 100 + "%");
+									}
+								},
+								false
+							);
+							return xhr;
+						},
+						type: "POST",
+						data: imgData,
+						processData: false,
+						contentType: false,
+						success: function (imgInsertedData) {
+							if (imgInsertedData.url != undefined)
+								data.image_front_url = imgInsertedData.url;
+							caricaOModificaProdotto(url, data, input, barcode, prezzo, type);
+						},
+						error: function (err) {
+							console.log(err);
+						},
+					});
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		} else caricaOModificaProdotto(url, data, input, barcode, prezzo, type);
 	} else {
 		alert("Alcuni campi non sono stati completati!", null, "", "Ok");
 	}
@@ -501,7 +507,8 @@ function toInt() {
 	let input = $(this);
 	input.val(parseInt(input.val()));
 }
-function caricaOModificaProdotto(url, data, input, barcode, prezzo, type){
+function caricaOModificaProdotto(url, data, input, barcode, prezzo, type) {
+	let bCode = data.barcode;
 	data.supermarket = input.supermercato;
 	$.ajax({
 		url: url,
@@ -509,32 +516,34 @@ function caricaOModificaProdotto(url, data, input, barcode, prezzo, type){
 		data: data,
 		timeout: 5000,
 		success: function (data) {
-			$.ajax({
-				url: "https://claudioconte.altervista.org/api/aggiungiProdottoASupermercato.php",
-				method: "POST",
-				timeout: 5000,
-				data: {
-					supermarket:superMarketsFullNames[input.supermercato],
-					barcode: barcode,
-					prezzo: prezzo,
-				},
-				success: function (data) {
-					if(data.err == -1){
-						$("#modal").modal("hide");
-						if(type==0)
-							alert("Prodotto inserito correttamente!", null, "", "Ok");
-						else
-							alert("Prodotto modificato correttamente!", null, "", "Ok");
-					}
-				},
-				error: function (err) {
-					console.log(err);
-				}
-			})
+			if (type == 0) {
+				$.ajax({
+					url: "https://claudioconte.altervista.org/api/aggiungiProdottoASupermercato.php",
+					method: "POST",
+					timeout: 5000,
+					data: {
+						supermarket: superMarketsFullNames[input.supermercato],
+						barcode: barcode,
+						prezzo: prezzo,
+					},
+					success: function (data) {
+						if (data.err == -1) {
+							$("#modal").modal("hide");
+							if (type == 0) displayResult("Prodotto inserito correttamente!");
+							mostraProdotto({ text: data.barcode });
+						}
+					},
+					error: function (err) {
+						console.log(err);
+					},
+				});
+			} else {
+				displayResult("Prodotto modificato correttamente!");
+				mostraProdotto({ text: bCode });
+			}
 		},
-		error: function (err)
-		{
+		error: function (err) {
 			console.log(err);
-		}
+		},
 	});
 }

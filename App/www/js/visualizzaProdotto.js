@@ -1,5 +1,5 @@
 function mostraProdotto(result) {
-	if (result.cancelled) {
+	if (result?.cancelled) {
 		return;
 	}
 	let modal = $("#modal");
@@ -129,7 +129,6 @@ function creaBodyProdotto(modalBody, data) {
 			modalBody.append(
 				divProdotto.addClass("row").append(
 					$("<div></div>")
-						.addClass("col-md-5")
 						.append(
 							$("<img>")
 								.addClass("img-responsive")
@@ -144,7 +143,7 @@ function creaBodyProdotto(modalBody, data) {
 				divIngredienti.html(data.ingredients_text);
 				divProdotto.append(
 					$("<div></div>")
-						.addClass("col-md-7")
+						.addClass("mt-3")
 						.append(
 							$("<div></div>")
 								.append($("<h4></h4>").text("Ingredienti: "))
@@ -154,7 +153,7 @@ function creaBodyProdotto(modalBody, data) {
 			}
 			let nutriments = data.nutriments;
 			if (nutriments != undefined && nutriments != "") {
-				nutrientsTable.addClass("table table-striped thead-success");
+				nutrientsTable.addClass("table table-striped thead-success mt-3");
 				nutrientsTable
 					.append(
 						$("<thead></thead>")
@@ -204,7 +203,7 @@ function creaBodyProdotto(modalBody, data) {
 				tblBody.appendTo(nutrientsTable);
 			}
 			let tbPrezzi = $("<table></table>")
-				.addClass("table table-striped thead-success")
+				.addClass("table table-striped thead-success mt-3")
 				.append(
 					$("<thead></thead>")
 						.append($("<th></th>").text("Supermercato"))

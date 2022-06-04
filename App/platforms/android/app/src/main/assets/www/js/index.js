@@ -9,6 +9,7 @@ function onDeviceReady() {
 	suggestions.hide();
 	alert = navigator.notification.alert;
 	mappa();
+	$("#resultDisplayer").hide();
 	$("#btnBarcode").on("click", barcodeScanner);
 	$("#txtSearchBox").on("focus change keydown", suggerimenti);
 	$("#txtSearchBox").on("focusout", () => {
@@ -244,4 +245,9 @@ function caricaCmbSupermercati(modifica = false, smVal = undefined) {
 	if(modifica){
 		select.val(smVal);
 	}
+}
+function displayResult(text){
+	let toast = $("#resultDisplayer");
+	toast.find("toast-body").text(text);
+	toast.toast("show");
 }

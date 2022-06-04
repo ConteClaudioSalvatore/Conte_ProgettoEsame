@@ -13,7 +13,7 @@ var resizeImage = function (settings) {
         var ia = new Uint8Array(max);
         for (var i = 0; i < max; i++)
             ia[i] = bytes.charCodeAt(i);
-        return new Blob([ia], { type: mime });
+        return new File([ia], file.name, { type: mime });
     };
     var resize = function () {
         var width = image.width;
