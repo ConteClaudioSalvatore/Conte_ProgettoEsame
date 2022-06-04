@@ -219,19 +219,6 @@ function creaBodyProdotto(modalBody, data) {
 					let aggPrezzo = dialogAggiuntaPrezzo(data.id, modalBody, data);
 					$("#dialogs").append(aggPrezzo);
 					caricaCmbSupermercati();
-					if (smProd.data != undefined) {
-						smProd.data.forEach((element) => {
-							let i = superMarketsFullNames.indexOf(
-								element.codice_supermercato
-							);
-							if (i != -1) {
-								$("#cmbSupermercato")
-									.children()
-									.eq(i + 1)
-									.attr("disabled", true);
-							}
-						});
-					}
 					aggPrezzo.modal("show");
 				})
 				.css({ width: "100%" });
