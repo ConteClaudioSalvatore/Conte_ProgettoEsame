@@ -10,62 +10,49 @@
     $postdata = file_get_contents("php://input");
     $data = json_decode($postdata);
     //cerco se il prodotto è già presente nel supermercato
-    try{
-        if($_POST["barcode"] != null && $_POST["supermarket"] != null && $_POST["prezzo"] != null){
-            $barcode = trim($_POST["barcode"]);
-            $supermarket = $con->real_escape_string($_POST["supermarket"]);
-            $prezzo = $_POST["prezzo"];
-        }
-        else{
-            $barcode = trim($data->barcode);
-            $supermarket = $con->real_escape_string($data->supermarket);
-            $prezzo = $data->prezzo;
-        }
-        $sql = "select * from prodotti_supermercati where codice_a_barre = ? and codice_supermercato = (select id from supermercati where descrizione = ? limit 1)";
-        $stmt = $con->prepare($sql);
-        $stmt->bind_param("ss", $barcode, $supermarket);
-        $stmt->execute();
-        if($stmt->num_rows()==0){
-            $stmt->close();
-            $sql = "insert into prodotti_supermercati(codice_a_barre, codice_supermercato, prezzo) 
-                    values(
-                        '$barcode',
-                        (select id from supermercati where descrizione = '$supermarket' limit 1),
-                        ".floatval($prezzo).")";
-            $rs = $con->query($sql);
-            if($rs == true){
-                $json->err = -1;
-                $json->msg = "Prodotto aggiunto al supermercato";
-                $json->barcode = $barcode;
-                echo json_encode($json);
-            }
-            else
-                echo json_encode("{err:1,message:\"Errore nell'inserimento".$rs->num_rows."\", sql:\"$sql\"}");
-            $con->close();
+    $barcode = trim($_POST["barcode"]);
+    $supermarket = $con->real_escape_string($_POST["supermarket"]);
+    $prezzo = $_POST["prezzo"];
+    $sql = "select * from prodotti_supermercati where codice_a_barre = '$barcode' and codice_supermercato = (select id from supermercati where descrizione = '$supermarket' limit 1)";
+    $rs = $con->query($sql);
+    if (!$rs)
+        die("Errore nella query " . $con->errno . " " . $con->error);
+    $row_cnt = $rs->num_rows;
+    if (intval($row_cnt) == 0){
+        $sql = "insert into prodotti_supermercati(codice_a_barre, codice_supermercato, prezzo) 
+                values(
+                    '$barcode',
+                    (select id from supermercati where descrizione = '$supermarket' limit 1),
+                    ".floatval($prezzo).")";
+        $rs = $con->query($sql);
+        if($rs == true){
+            $json->err = -1;
+            $json->msg = "Prezzo aggiunto al supermercato";
+            $json->barcode = $barcode;
+            echo json_encode($json);
         }
         else
-        {
-            $stmt->close();
-            $sql = "update prodotti_supermercati 
-                    set 
-                    prezzo = ".floatval($prezzo)." 
-                    where 
-                        codice_a_barre = '$barcode'
-                        and 
-                        codice_supermercato = (select id from supermercati where descrizione = '$supermarket' limit 1)";
-            $rs = $con->query($sql);
-            if($rs == true){
-                $json->err = -1;
-                $json->msg = "Prodotto modificato nel supermercato";
-                $json->barcode = $barcode;
-                echo json_encode($json);
-            }
-            else
-                echo json_encode("{err:1,message:\"Errore nella modifica".$rs->num_rows."\", sql:\"$sql\"}");
-        }
+            echo json_encode("{err:1,message:\"Errore nell'inserimento".$rs->num_rows."\", sql:\"$sql\"}");
+        $con->close();
     }
-    catch(Exception $e){
-        echo json_encode("{err:1,message:'Errore nell'inserimento $e'}");
+    else
+    {
+        $sql = "update prodotti_supermercati 
+                set 
+                prezzo = ".floatval($prezzo)." 
+                where 
+                    codice_a_barre = '$barcode'
+                    and 
+                    codice_supermercato = (select id from supermercati where descrizione = '$supermarket' limit 1)";
+        $rs = $con->query($sql);
+        if($rs == true){
+            $json->err = -1;
+            $json->msg = "Prezzo modificato nel supermercato";
+            $json->barcode = $barcode;
+            echo json_encode($json);
+        }
+        else
+            echo json_encode("{err:1,message:\"Errore nella modifica".$rs->num_rows."\", sql:\"$sql\"}");
     }
     
 ?>
