@@ -154,7 +154,7 @@ function creaBodyProdotto(modalBody, data) {
 			}
 			let nutriments = data.nutriments;
 			if (nutriments != undefined && nutriments != "") {
-				nutrientsTable.addClass("table");
+				nutrientsTable.addClass("table table-striped thead-success");
 				nutrientsTable
 					.append(
 						$("<thead></thead>")
@@ -204,7 +204,7 @@ function creaBodyProdotto(modalBody, data) {
 				tblBody.appendTo(nutrientsTable);
 			}
 			let tbPrezzi = $("<table></table>")
-				.addClass("table table-striped")
+				.addClass("table table-striped thead-success")
 				.append(
 					$("<thead></thead>")
 						.append($("<th></th>").text("Supermercato"))

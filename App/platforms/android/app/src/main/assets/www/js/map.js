@@ -325,6 +325,7 @@ async function getSupermarkets(data){
   return await $.ajax({
     url: url,
     type: "GET",
+    headers: { "accept-language":"it-IT,it;q=0.9"},
     error: function (e) {
       console.log("Error: " , e);
     }

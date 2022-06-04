@@ -16,7 +16,7 @@
     $image_front_url = $_POST['image_front_url'];
     $ingredients_text = $_POST['ingredients_text'];
     $nutriments = $_POST['nutriments'];
-    $supermarket = $_POST['supermarket'];
+    $supermarket = $con->real_escape_string($_POST['supermarket']);
     $sql = "update prodotti set ";
     if($_POST['keywords'] != null)
         $sql .= "keywords = '".$con->real_escape_string($keywords)."', ";
@@ -34,9 +34,8 @@
         $rs = $con->query($sql);
         if($rs->num_rows == 0){
             $prezzo = $_POST["prezzo"];
-            $supermercato = $_POST["supermarket"];
             $sql = "insert into prodotti_supermercati (codice_a_barre, codice_supermercato, prezzo)
-                    values ('$barcode', (select id from supermercati where descrizione = '$supermarket' limit 1), '$prezzo')";
+                    values ('$barcode', (select id from supermercati where descrizione = '$supermarket' limit 1), $prezzo)";
         }
         else{
             $sql = "update prodotti_supermercati set prezzo = $prezzo

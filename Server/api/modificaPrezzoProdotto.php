@@ -13,7 +13,7 @@
     $stmt = $con->prepare($sql);
     $stmt->bind_param("dss", $prezzo, $supermercato, $barcode);
     $barcode = $_POST["barcode"];
-    $supermercato = $_POST["supermercato"];
+    $supermercato = $con->real_escape_string($_POST["supermercato"]);
     $prezzo = $_POST["prezzo"];
     if($stmt->execute()){
         $json->err = -1;

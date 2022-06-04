@@ -19,7 +19,7 @@
         $sql = "insert into supermercati(descrizione) values ('$supermercato')";
         if($con->query($sql)){
             $json->code = -1;
-            $json->message = "supermercato inserito con successo";
+            $json->message = "Nuovo Supermercato Aggiunto: $supermercato";
             echo(json_encode($json));
         }
         else

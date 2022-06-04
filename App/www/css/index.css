@@ -164,3 +164,31 @@ button.mapOrientation:active {
 .alert{
 	border-radius: 25px;
 }
+#modalBody .table th{
+	text-align: center;
+}
+#modalBody .table {
+	border-radius: 25px !important;
+}
+#modalBody .table tr:last-of-type {
+	border: none;
+	border-color: #fff;
+}
+#modalBody .table tr:last-of-type td:first-of-type {
+	border-bottom-left-radius: 20px !important;
+}
+#modalBody .table tr:last-of-type td:last-of-type {
+	border-bottom-right-radius: 20px !important;
+}
+#modalBody .table thead{
+	background-color: #85d2ff;
+}
+#modalBody .table thead th:first-child{
+	border-top-left-radius: 25px !important;
+}
+#modalBody .table thead th:last-child{
+	border-top-right-radius: 25px !important;
+}
+#modalBody .table thead th{
+	line-height: 40px;
+}
