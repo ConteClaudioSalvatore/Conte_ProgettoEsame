@@ -281,7 +281,7 @@ function caricaModificaProdotto(barcode) {
 						)
 				);
 			if (data.nutriments != null && data.nutriments != undefined) {
-				$("#txtEnegiaJ").val(data.nutriments.energy);
+				$("#txtEnergiaJ").val(data.nutriments.energy);
 				$("#txtEnergiaKcal").val(data.nutriments["energy-kcal"]);
 				$("#txtGrassi").val(data.nutriments.fat);
 				$("#txtGrassiSaturi").val(data.nutriments["saturated-fat"]);
