@@ -11,7 +11,7 @@
     $barcode = $_POST['barcode'];
     $sql = "";
     if($nomeProdotto != null)
-        $sql = "select * from prodotti where generic_name like '$nomeProdotto%' limit 25";
+        $sql = "select * from prodotti where generic_name like '$nomeProdotto%' or keywords like '%$nomeProdotto%' or categories like '%$nomeProdotto%' limit 25";
     else if($barcode != null)
         $sql = "select * from prodotti where id='$barcode'";
     else
