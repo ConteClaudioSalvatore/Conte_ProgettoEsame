@@ -15,7 +15,7 @@
     else if($barcode != null)
         $sql = "select * from prodotti where id='$barcode'";
     else
-        $sql = "select * from prodotti limit 10";
+        $sql = "select * from prodotti limit 5";
     /*Il metodo query lancia la query sql e restituisce il recordset corrispondente*/
     $rs = $con->query($sql);
     /*Controlla se il recordset esiste o no cioè se ci sono stati degli errori*/
