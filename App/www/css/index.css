@@ -200,3 +200,6 @@ button.mapOrientation:active {
 #modalBody .alert{
 	box-shadow: 0 0 5px #000a;
 }
+#modalBody .prodottoSupermercato img {
+	box-shadow: none;
+}
