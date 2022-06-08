@@ -77,7 +77,7 @@ function suggerimenti() {
 											)
 									)
 									.on("click", function (e) {
-										var barcode = $(this).find("span").attr("barcode");
+										var barcode = $(e.target).attr("barcode");
 										mostraProdotto({ text: barcode });
 										suggestions.empty().hide();
 									})

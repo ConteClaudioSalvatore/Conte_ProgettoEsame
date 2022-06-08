@@ -9,7 +9,6 @@ function mostraProdotto(result) {
 	let postParams = { barcode: result.text };
 	let urlOpenFoodFacts =
 		"https://it.openfoodfacts.org/api/v0/product/" + result.text + ".json";
-
 	$.ajax({
 		url: url,
 		method: "post",
@@ -99,9 +98,9 @@ function creaBodyProdotto(modalBody, data) {
 						)
 				);
 			modalBody.append(
-				$("<span></span>")
+				$("<div></div>")
 					.text("Codice: ")
-					.addClass("text-center my-2")
+					.addClass("text-center mb-3")
 					.append(
 						$("<strong></strong>").text(data.id).attr("id", "codiceABarre")
 					)
@@ -123,6 +122,7 @@ function creaBodyProdotto(modalBody, data) {
 					error: function (err) {
 						console.log(err);
 					},
+					timeout: 5000
 				});
 			}
 			navigator.splashscreen.hide();
@@ -258,7 +258,7 @@ function creaBodyProdotto(modalBody, data) {
 				} else {
 					modalBody.append(
 						$("<div></div>")
-							.addClass("alert alert-warning")
+							.addClass("alert alert-warning mt-3")
 							.append(
 								$("<span></span>").text(
 									"Nessun prezzo trovato nei supermercati vicini per questo prodotto."
@@ -270,7 +270,7 @@ function creaBodyProdotto(modalBody, data) {
 			} else
 				modalBody.append(
 					$("<div></div>")
-						.addClass("alert alert-warning")
+						.addClass("alert alert-warning mt-3")
 						.append(
 							$("<span></span>").text(
 								"Nessun prezzo trovato nei supermercati vicini per questo prodotto."
