@@ -134,7 +134,7 @@ button.mapOrientation:active {
 	border-top-right-radius: 50px !important;
 	border-bottom-right-radius: 50px !important;
 }
-.form-group {
+.form-group{
 	margin-top: 10px;
 }
 #suggestions {
@@ -152,19 +152,19 @@ button.mapOrientation:active {
 	padding-bottom: 1rem;
 	border-bottom: 1px solid #444;
 }
-#suggestions .row:first-of-type {
+#suggestions .row:first-of-type{
 	margin-top: 50px;
 }
 #suggestions .row:last-of-type {
 	border-bottom: none;
 }
-.btn {
+.btn{
 	border-radius: 25px;
 }
-.alert {
+.alert{
 	border-radius: 25px;
 }
-#modalBody .table th {
+#modalBody .table th{
 	text-align: center;
 }
 #modalBody .table tr:last-of-type {
@@ -177,29 +177,26 @@ button.mapOrientation:active {
 #modalBody .table tr:last-of-type td:last-of-type {
 	border-bottom-right-radius: 20px !important;
 }
-#modalBody .table thead {
+#modalBody .table thead{
 	background-color: #bee7ff;
 }
-#modalBody .table thead th:first-child {
+#modalBody .table thead th:first-child{
 	border-top-left-radius: 20px !important;
 }
-#modalBody .table thead th:last-child {
+#modalBody .table thead th:last-child{
 	border-top-right-radius: 20px !important;
 }
-#modalBody .table thead th {
+#modalBody .table thead th{
 	line-height: 40px;
 }
 #modalBody .table {
 	box-shadow: 0 0 5px #000;
 	border-radius: 20px;
 }
-#modalBody img {
+#modalBody img{
 	border-radius: 20px;
 	box-shadow: 0 0 5px #000a;
 }
-#modalBody .alert {
+#modalBody .alert{
 	box-shadow: 0 0 5px #000a;
-}
-#modalBody .prodottoSupermercato img {
-	box-shadow: none;
 }
