@@ -366,7 +366,7 @@ async function getSupermarkets(data) {
 	let posInfo = data.address;
 	//console.log(posInfo);
 	let url =
-		"https://nominatim.openstreetmap.org/search?format=json&countrycodes=it&q=supermercati";
+		"https://nominatim.openstreetmap.org/search?format=json&countrycodes=it&city=";
 	if (posInfo.village != undefined) {
 		//console.log(posInfo.village);
 		url += "+" + posInfo.village.split(" ").join("+");
@@ -379,7 +379,7 @@ async function getSupermarkets(data) {
 		//console.log(posInfo.town);
 		url += "+" + posInfo.town.split(" ").join("+");
 	}
-	url += "&state=" + posInfo.state.split(" ").join("+");
+	url += "&state=" + posInfo.county.split(" ").join("+") + "&amenity=supermarket&limit=50";
 	return await $.ajax({
 		url: url,
 		type: "GET",
