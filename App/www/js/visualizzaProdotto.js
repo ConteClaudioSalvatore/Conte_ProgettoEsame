@@ -183,7 +183,7 @@ function creaBodyProdotto(modalBody, data) {
 						tr = $("<tr></tr>");
 						tr.append(
 							$("<td></td>")
-								.text(italiano(nutriment))
+								.text(italiano(nutriment) + "(g)")
 								.css({ fontWeight: "bold" })
 						);
 						let nutrimentText = nutriments[nutriment];
