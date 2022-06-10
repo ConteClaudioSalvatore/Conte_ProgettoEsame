@@ -6,6 +6,8 @@ function inserisciProdottoSuDB(data) {
 	if (data.generic_name == undefined) {
 		data.generic_name = "";
 	}
+	if(data.keywords == undefined)
+		data.keywords = "";
 	let postParams = {
 		barcode: data.code,
 		generic_name: data.generic_name,
