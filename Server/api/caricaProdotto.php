@@ -14,7 +14,7 @@
     $created_t = floor(microtime(true) * 1000);
     $generic_name = $_POST['generic_name'];
     $image_front_url = $con->real_escape_string($_POST['image_front_url']);
-    $ingredients_text = $_POST['ingredients_text'];
+    $ingredients_text = $con->real_escape_string($_POST['ingredients_text']);
     $nutriments = $_POST['nutriments'];
     $sql = "insert into prodotti(id, keywords, categories, creator, created_t, generic_name,image_front_url, ingredients_text";
     if($nutriments != null)
@@ -24,7 +24,6 @@
     if($nutriments != null)
         $sql .= ",'$nutriments'";
     $sql.=")";
-    
     if($con->query($sql))
     {
         $json->message = "Prodotto inserito correttamente";
