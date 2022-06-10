@@ -3,6 +3,9 @@ function inserisciProdottoSuDB(data) {
 	if (data.ingredients_text == undefined) {
 		data.ingredients_text = "";
 	}
+	if (data.generic_name == undefined) {
+		data.generic_name = "";
+	}
 	let postParams = {
 		barcode: data.code,
 		generic_name: data.generic_name,
