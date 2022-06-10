@@ -192,7 +192,7 @@ function nuovoProdotto(code, buttonIndex) {
 									)
 									.append(
 										$("<tr></tr>")
-											.append($("<td></td>").text("Grassi (g)"))
+											.append($("<td></td>").text("Fibre (g)"))
 											.append(
 												$("<td></td>").append(
 													$("<input>")
