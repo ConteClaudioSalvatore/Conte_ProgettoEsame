@@ -20,7 +20,7 @@ function mostraProdotto(result) {
 				data = data[0];
 				if (data.generic_name != undefined) {
 					if (data.generic_name.length > 15)
-						modalTitle.text(data.generic_name.substring(0, 25) + "...");
+						modalTitle.text(data.generic_name.substring(0, 25) + " ...");
 					else modalTitle.text(data.generic_name);
 				} else modalTitle.text("Prodotto");
 				if (data.nutriments != undefined && data.nutriments != "")
