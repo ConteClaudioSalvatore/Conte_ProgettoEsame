@@ -90,13 +90,12 @@ button.mapOrientation:active {
 	box-shadow: 0 0 3px #000;
 }
 .searchbar input[type="text"] {
-	background-color: #0000;
+	background-color: #fff;
 	border: none;
 	float: left;
 	width: 95vw;
 	height: 50px;
 	border-radius: 25px;
-	z-index: 3;
 	color: #000;
 	padding-left: 20px;
 	padding-right: 55px;
@@ -111,7 +110,7 @@ button.mapOrientation:active {
 	margin: 5px;
 }
 #modalBody {
-	height: 75vh;
+	height: 70vh;
 	overflow-y: auto;
 }
 .modal {
@@ -138,11 +137,15 @@ button.mapOrientation:active {
 	margin-top: 10px;
 }
 #suggestions {
+	position: absolute;
+	width: 95vw;
+	max-height: 50vh;
+	overflow: scroll;
 	background-color: #fff;
 	box-shadow: 0 0 3px #000;
 	border-radius: 25px;
 	padding: 0.5rem;
-	z-index: 1;
+	z-index: -1;
 }
 #suggestions .row {
 	display: block;
