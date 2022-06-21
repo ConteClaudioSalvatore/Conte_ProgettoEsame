@@ -85,9 +85,15 @@ function suggerimenti() {
 						});
 					}
 					suggestions.show();
+					suggestions.on("focusout", () => {
+						setTimeout(() => {
+							suggestions.empty().hide();
+						}, 100);
+					});
 				} else {
 					suggestions.empty().hide();
 				}
+				
 			},
 			error: function (error) {
 				console.log(error);
