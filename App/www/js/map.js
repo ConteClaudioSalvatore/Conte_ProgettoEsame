@@ -52,6 +52,7 @@ function mappa() {
 					addSupermarketMarkers();
 					setInterval(addSupermarketMarkers, 10000);
 					map.on("click", function (evt) {
+						$("#suggestions").empty().hide()
 						const feature = map.forEachFeatureAtPixel(
 							evt.pixel,
 							function (feature) {

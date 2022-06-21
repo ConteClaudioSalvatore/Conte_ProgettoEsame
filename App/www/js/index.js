@@ -15,7 +15,7 @@ function onDeviceReady() {
 	$("#txtSearchBox").on("focusout", () => {
 		setTimeout(() => {
 			suggestions.empty().hide();
-		}, 100);
+		}, 150);
 	});
 	btnGps = $("#btnCenterMapOnUser");
 	btnGps.on("click", onGpsButtonClick);
@@ -85,11 +85,6 @@ function suggerimenti() {
 						});
 					}
 					suggestions.show();
-					suggestions.on("focusout", () => {
-						setTimeout(() => {
-							suggestions.empty().hide();
-						}, 100);
-					});
 				} else {
 					suggestions.empty().hide();
 				}
@@ -99,7 +94,7 @@ function suggerimenti() {
 				console.log(error);
 			},
 		});
-	}, 100);
+	}, 50);
 }
 function dialogAggiuntaPrezzo(barcode, modalBody, data) {
 	return $("<div></div>")
